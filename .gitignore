@@ -1,3 +1,4 @@
 auth/htpasswd
 repos/
 keys/
+caddy-root.crt
