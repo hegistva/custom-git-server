@@ -4,9 +4,32 @@ services:
     container_name: git-server
     ports:
       - "2222:22"  # SSH
-      - "8080:80"  # HTTP (Use a Reverse Proxy for HTTPS)
     volumes:
       - ./repos:/git-repos
       - ./keys/authorized_keys:/home/git/.ssh/authorized_keys
-      - ./auth/htpasswd:/etc/nginx/.htpasswd:ro
+    networks:
+      - gitnet
     restart: always
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: git-caddy
+    depends_on:
+      - git-server
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - gitnet
+    restart: always
+
+volumes:
+  caddy_data:
+  caddy_config:
+
+networks:
+  gitnet:

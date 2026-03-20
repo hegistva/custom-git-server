@@ -8,7 +8,6 @@ RUN apk add --no-cache \
     nginx \
     fcgiwrap \
     spawn-fcgi \
-    apache2-utils \
     bash
 
 # 2. Setup SSH
