@@ -8,4 +8,5 @@ services:
     volumes:
       - ./repos:/git-repos
       - ./keys/authorized_keys:/home/git/.ssh/authorized_keys
+      - ./auth/htpasswd:/etc/nginx/.htpasswd:ro
     restart: always

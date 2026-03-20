@@ -8,6 +8,7 @@ RUN apk add --no-cache \
     nginx \
     fcgiwrap \
     spawn-fcgi \
+    apache2-utils \
     bash
 
 # 2. Setup SSH
@@ -18,9 +19,6 @@ RUN ssh-keygen -A && \
 # 3. Setup Directories
 RUN mkdir -p /git-repos /home/git/.ssh && \
     chown -R git:git /git-repos /home/git/.ssh
-
-# 4. Allow unauthenticated HTTP push (receive-pack) globally
-RUN git config --system http.receivepack true
 
 # 4. Configure Nginx for Git Smart HTTP
 COPY nginx.conf /etc/nginx/nginx.conf
