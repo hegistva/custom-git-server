@@ -6,8 +6,8 @@
 import path from 'path';
 import { config } from 'dotenv';
 
-// Load root-level .env (two directories above apps/backend/)
-config({ path: path.resolve(__dirname, '../../.env') });
+// Load root-level .env (three directories above tests/: tests/ -> backend/ -> apps/ -> root)
+config({ path: path.resolve(__dirname, '../../../.env') });
 
 // Prefer DATABASE_URL_TEST for all test runs
 if (process.env.DATABASE_URL_TEST) {
