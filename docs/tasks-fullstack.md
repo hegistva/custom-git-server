@@ -1,0 +1,238 @@
+# Tasks: Fullstack Git Hosting Platform
+
+Reference design: [design-fullstack.md](design-fullstack.md)
+
+---
+
+## Phase 0 — Monorepo Root Setup
+
+- [ ] Move `Dockerfile`, `entrypoint.sh`, `nginx.conf` to `infra/git-server/`
+- [ ] Update `docker-compose.yml` build context for `git-server` to `./infra/git-server`
+- [ ] Create `apps/` directory stub (empty `backend/` and `frontend/` folders)
+- [ ] Create root `package.json` with `pnpm` workspace config and workspace scripts
+- [ ] Create `pnpm-workspace.yaml` pointing to `apps/*`
+- [ ] Create `turbo.json` with pipeline definitions for `build`, `dev`, `lint`, `test`
+- [ ] Create `.env.example` with all required variables documented
+- [ ] Create `.env` (gitignored) copied from `.env.example` for local dev
+- [ ] Verify `docker compose up -d --build` still works with moved infra files
+
+---
+
+## Phase 1 — Backend Scaffold
+
+- [ ] Init `apps/backend` with `pnpm create` or manual scaffold
+- [ ] Configure TypeScript (`tsconfig.json`, strict mode, path aliases)
+- [ ] Add Fastify, `@fastify/cors`, `@fastify/cookie`, `@fastify/helmet`
+- [ ] Add TypeBox for schema validation (`@sinclair/typebox`)
+- [ ] Add `pino` logging (Fastify built-in)
+- [ ] Add Prisma (`prisma`, `@prisma/client`)
+- [ ] Add Vitest + Supertest for testing
+- [ ] Scaffold folder structure: `src/plugins/`, `src/routes/`, `src/services/`, `src/lib/`, `src/types/`
+- [ ] Implement `/internal/health` and `/internal/ready` endpoints
+- [ ] Add Dockerfile for backend (`apps/backend/Dockerfile`)
+- [ ] Add `backend` service to `docker-compose.yml` with health check
+- [ ] Verify backend starts and health check passes in compose
+
+---
+
+## Phase 2 — Database Setup
+
+- [ ] Add `postgres` service to `docker-compose.yml` with `postgres_data` volume and health check
+- [ ] Configure Prisma `DATABASE_URL` via environment variable
+- [ ] Create initial Prisma schema: `User`, `SshKey`, `PersonalAccessToken`, `Repository`, `RefreshToken`
+- [ ] Create and apply initial migration (`prisma migrate dev --name init`)
+- [ ] Add `db:migrate` and `db:seed` scripts to `package.json`
+- [ ] Create seed file with at least one test user for local dev
+- [ ] Add Prisma client singleton to `src/lib/db.ts`
+- [ ] Verify `prisma migrate deploy` runs cleanly in compose on fresh volume
+- [ ] Verify DB connection from backend health check
+
+---
+
+## Phase 3 — Frontend Scaffold
+
+- [ ] Init `apps/frontend` with `pnpm create vite` (React + TypeScript template)
+- [ ] Configure TypeScript (`tsconfig.json`, strict mode, path aliases)
+- [ ] Add TanStack Query (`@tanstack/react-query`)
+- [ ] Add Zustand for auth state
+- [ ] Add React Router v7 (`react-router-dom`)
+- [ ] Add React Hook Form + Zod for form validation
+- [ ] Add `ky` for HTTP client (thin wrapper in `src/lib/api.ts`)
+- [ ] Add Vitest + Testing Library (`@testing-library/react`) for unit tests
+- [ ] Add Playwright for E2E tests
+- [ ] Scaffold page components as stubs: `LandingPage`, `LoginPage`, `RegisterPage`, `DashboardPage`, `SshKeysPage`, `TokensPage`, `NewRepositoryPage`, `RepositoryPage`
+- [ ] Implement route definitions with `React Router` (guarded routes for auth-required pages)
+- [ ] Add `AuthContext` and `ProtectedRoute` component
+- [ ] Add Dockerfile for frontend (`apps/frontend/Dockerfile`)
+- [ ] Add `frontend` service to `docker-compose.yml`
+- [ ] Verify frontend serves at expected path via Caddy
+
+---
+
+## Phase 4 — Auth Feature
+
+### Backend
+
+- [ ] Implement `POST /api/auth/register` with TypeBox validation, bcrypt hash (cost 12)
+- [ ] Implement `POST /api/auth/login` returning JWT access token + httpOnly refresh token cookie
+- [ ] Implement `POST /api/auth/refresh` validating refresh token, rotating tokens
+- [ ] Implement `POST /api/auth/logout` revoking refresh token in DB
+- [ ] Implement `GET /api/auth/me` returning current user (JWT guard)
+- [ ] Add rate limiting on all `/api/auth/*` routes (`@fastify/rate-limit`)
+- [ ] Write tests: register (happy path, duplicate username, duplicate email, invalid input)
+- [ ] Write tests: login (happy path, wrong password, unknown user)
+- [ ] Write tests: refresh (happy path, expired token, revoked token)
+- [ ] Write tests: logout (happy path, already logged out)
+- [ ] Write tests: me (authenticated, unauthenticated)
+
+### Frontend
+
+- [ ] Implement `RegisterPage` form with validation (username, email, password, confirm password)
+- [ ] Implement `LoginPage` form with validation
+- [ ] Wire auth pages to backend via TanStack Query mutations
+- [ ] Implement token storage in auth store (access token in memory only)
+- [ ] Implement silent refresh on 401 responses in API client
+- [ ] Implement `ProtectedRoute` redirect to login on missing auth
+- [ ] Write component tests: RegisterPage renders and validates
+- [ ] Write component tests: LoginPage renders and validates
+- [ ] Write E2E test: full register → login flow
+
+---
+
+## Phase 5 — SSH Key Management
+
+### Backend
+
+- [ ] Implement `GET /api/ssh-keys` returning user's keys
+- [ ] Implement `POST /api/ssh-keys` validating SSH public key format, computing fingerprint, appending to `authorized_keys`
+- [ ] Implement `DELETE /api/ssh-keys/:id` removing key from DB and `authorized_keys`
+- [ ] Implement SSH key parsing utility in `src/lib/ssh-key.ts` (parse format, extract fingerprint)
+- [ ] Add volume mount for `keys/` directory in backend container
+- [ ] Write tests: list (empty list, populated list)
+- [ ] Write tests: add (happy path, invalid key format, duplicate fingerprint)
+- [ ] Write tests: delete (happy path, not found, wrong owner)
+
+### Frontend
+
+- [ ] Implement `SshKeysPage`: list view with add form and delete buttons
+- [ ] Wire to backend API via TanStack Query
+- [ ] Show fingerprint and creation date for each key
+- [ ] Write component tests: SshKeysPage renders key list
+- [ ] Write component tests: add key form validates and submits
+
+---
+
+## Phase 6 — Personal Access Tokens
+
+### Backend
+
+- [ ] Implement `GET /api/tokens` returning token metadata (no raw token, prefix only)
+- [ ] Implement `POST /api/tokens` generating 32-byte random token, bcrypt-hashing, storing prefix
+- [ ] Implement `DELETE /api/tokens/:id` setting `revoked_at` timestamp
+- [ ] Implement `GET /internal/git-auth` decoding Basic Auth header, looking up user by username, checking PAT hash against non-revoked tokens, checking repo ownership
+- [ ] Write tests: list tokens (empty, populated)
+- [ ] Write tests: create token (happy path, label required)
+- [ ] Write tests: revoke token (happy path, not found, wrong owner)
+- [ ] Write tests: git-auth (valid PAT, wrong PAT, revoked PAT, unknown user, missing auth header)
+
+### Frontend
+
+- [ ] Implement `TokensPage`: list metadata, generate PAT with one-time reveal modal, revoke button
+- [ ] Wire to backend API
+- [ ] Add one-time reveal component (shows raw token once after creation, then hides)
+- [ ] Write component tests: token list renders, revoke triggers mutation
+- [ ] Write component tests: generate shows confirmation modal with token value
+
+---
+
+## Phase 7 — Repository Management
+
+### Backend
+
+- [ ] Implement `GET /api/repositories` returning user's repositories
+- [ ] Implement `POST /api/repositories` creating a bare repo on disk via `git init --bare`, recording in DB
+- [ ] Implement `GET /api/repositories/:owner/:name` returning repo metadata
+- [ ] Implement `DELETE /api/repositories/:owner/:name` removing DB record and deleting directory
+- [ ] Implement repo path resolver utility in `src/lib/repo.ts` (safe path construction, prefix validation)
+- [ ] Add volume mount for `repos/` directory in backend container
+- [ ] Update `/internal/git-auth` to verify repository exists and requester is owner (or member, future)
+- [ ] Write tests: list (empty, populated)
+- [ ] Write tests: create (happy path, duplicate name, invalid name format)
+- [ ] Write tests: get (happy path, not found, different owner)
+- [ ] Write tests: delete (happy path, not found, wrong owner)
+
+### Frontend
+
+- [ ] Implement `DashboardPage`: repo list with links and "New repository" button
+- [ ] Implement `NewRepositoryPage`: form for name, description, private/public toggle
+- [ ] Implement `RepositoryPage`: metadata display + SSH clone URL + HTTPS clone URL with PAT instructions
+- [ ] Wire all pages to backend API
+- [ ] Write component tests: DashboardPage renders repo list
+- [ ] Write component tests: NewRepositoryPage validates name format and submits
+- [ ] Write E2E test: login → create repository → navigate to repo detail
+
+---
+
+## Phase 8 — nginx Auth Request Integration
+
+- [ ] Add `auth_request` directive to nginx `*.git` location block
+- [ ] Add internal `/auth-check` location proxying to `backend:4000/internal/git-auth`
+- [ ] Map `X-Auth-Username` response header to `REMOTE_USER` FastCGI param
+- [ ] Add env var `GIT_AUTH_BACKEND` to `git-server` container
+- [ ] Implement conditional nginx config (template or env-switched) for Phase 1 parallel operation
+- [ ] Write integration test: valid PAT → 200 on Git info/refs endpoint
+- [ ] Write integration test: invalid PAT → 401
+- [ ] Write integration test: unauthenticated → 401
+- [ ] Verify `git clone`, `git push`, `git fetch` work end-to-end over HTTPS with PAT
+- [ ] Verify SSH clone / push unchanged after changes
+
+---
+
+## Phase 9 — Caddy Routing Update
+
+- [ ] Add `/api/*` → `backend:4000` route in Caddyfile
+- [ ] Add `/*` fallback → `frontend:3000` route for SPA (with proper index.html fallback)
+- [ ] Adjust `*.git` route to no longer require `basicauth` (auth moved to nginx auth_request)
+- [ ] Verify HTTPS redirect still works
+- [ ] Verify UI accessible at `https://localhost`
+- [ ] Verify API accessible at `https://localhost/api/*`
+- [ ] Verify Git HTTPS accessible at `https://localhost/<owner>/<repo>.git`
+
+---
+
+## Phase 10 — Developer Experience Polish
+
+- [ ] Add `turbo run dev` to start all services in watch mode (frontend + backend hot reload)
+- [ ] Add `turbo run test` pipeline running backend Vitest + frontend Vitest + Playwright
+- [ ] Add `turbo run lint` via ESLint + Prettier across both apps
+- [ ] Add `turbo run build` for production builds
+- [ ] Add `docker compose --profile dev` override for hot-reload mounts
+- [ ] Document local dev setup in `docs/README.md`
+- [ ] Add `CONTRIBUTING.md` with environment setup steps
+
+---
+
+## Phase 11 — Documentation Refresh
+
+- [ ] Update `docs/README.md` with new full-stack architecture, startup guide, and user workflow
+- [ ] Update `docs/design-http-auth-https.md` to mark static auth as deprecated
+- [ ] Update `docs/tasks-http-auth-https.md` to mark relevant tasks as superseded
+- [ ] Add architecture diagram to `docs/README.md`
+
+---
+
+## Verification Checklist (End-to-End)
+
+- [ ] `pnpm install` succeeds from repo root
+- [ ] `pnpm turbo run build` succeeds for all workspaces
+- [ ] `docker compose up -d --build` brings all 5 services healthy
+- [ ] Fresh DB volume: Prisma migration applies and seed runs
+- [ ] Register → login flow works in browser
+- [ ] Add SSH key → SSH `git clone` succeeds on port 2222
+- [ ] Generate PAT → HTTPS `git clone` succeeds with username:PAT
+- [ ] Create repository → appears in UI and can be cloned
+- [ ] All backend tests pass: `pnpm turbo run test --filter=backend`
+- [ ] All frontend tests pass: `pnpm turbo run test --filter=frontend`
+- [ ] Playwright E2E: register → login → create repo → clone URL displayed
+- [ ] Unauthenticated HTTPS Git request returns 401
+- [ ] Unauthorized repo access (different user's PAT) returns 403
