@@ -95,7 +95,9 @@ Reference design: [design-fullstack.md](design-fullstack.md)
 - [x] Implement `ProtectedRoute` redirect to login on missing auth
 - [x] Write component tests: RegisterPage renders and validates
 - [x] Write component tests: LoginPage renders and validates
+- [x] Write component tests: DashboardPage renders and handles logout
 - [x] Write E2E test: full register → login flow
+- [x] Implement logout functionality on the frontend and connect to backend logout
 
 ---
 

@@ -40,8 +40,9 @@ test.describe('Auth flow', () => {
     await page.getByRole('button', { name: /create account/i }).click()
     await expect(page).toHaveURL(/\/dashboard/)
 
-    // Log out by navigating to login page directly (simulating manual logout)
-    await page.goto('/login')
+    // Log out via the UI button
+    await page.getByRole('button', { name: /log out/i }).click()
+    await expect(page).toHaveURL(/\/login/)
 
     // Log in
     await page.getByLabel('Username').fill(testUsername)
