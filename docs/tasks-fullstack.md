@@ -20,18 +20,18 @@ Reference design: [design-fullstack.md](design-fullstack.md)
 
 ## Phase 1 — Backend Scaffold
 
-- [ ] Init `apps/backend` with `pnpm create` or manual scaffold
-- [ ] Configure TypeScript (`tsconfig.json`, strict mode, path aliases)
-- [ ] Add Fastify, `@fastify/cors`, `@fastify/cookie`, `@fastify/helmet`
-- [ ] Add TypeBox for schema validation (`@sinclair/typebox`)
-- [ ] Add `pino` logging (Fastify built-in)
-- [ ] Add Prisma (`prisma`, `@prisma/client`)
-- [ ] Add Vitest + Supertest for testing
-- [ ] Scaffold folder structure: `src/plugins/`, `src/routes/`, `src/services/`, `src/lib/`, `src/types/`
-- [ ] Implement `/internal/health` and `/internal/ready` endpoints
-- [ ] Add Dockerfile for backend (`apps/backend/Dockerfile`)
-- [ ] Add `backend` service to `docker-compose.yml` with health check
-- [ ] Verify backend starts and health check passes in compose
+- [x] Init `apps/backend` with `pnpm create` or manual scaffold
+- [x] Configure TypeScript (`tsconfig.json`, strict mode, path aliases)
+- [x] Add Fastify, `@fastify/cors`, `@fastify/cookie`, `@fastify/helmet`
+- [x] Add TypeBox for schema validation (`@sinclair/typebox`)
+- [x] Add `pino` logging (Fastify built-in)
+- [x] Add Prisma (`prisma`, `@prisma/client`)
+- [x] Add Vitest + Supertest for testing
+- [x] Scaffold folder structure: `src/plugins/`, `src/routes/`, `src/services/`, `src/lib/`, `src/types/`
+- [x] Implement `/internal/health` and `/internal/ready` endpoints
+- [x] Add Dockerfile for backend (`apps/backend/Dockerfile`)
+- [x] Add `backend` service to `docker-compose.yml` with health check
+- [x] Verify backend starts and health check passes in compose
 
 ---
 

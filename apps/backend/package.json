@@ -1,0 +1,37 @@
+{
+  "name": "@custom-git-server/backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "postinstall": "prisma generate",
+    "dev": "tsx watch src/index.ts",
+    "prisma:generate": "prisma generate",
+    "build": "pnpm prisma:generate && tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@fastify/cookie": "^11.0.2",
+    "@fastify/cors": "^11.0.1",
+    "@fastify/helmet": "^13.0.2",
+    "@fastify/sensible": "^6.0.3",
+    "@fastify/type-provider-typebox": "^5.0.0",
+    "@prisma/client": "^6.6.0",
+    "@sinclair/typebox": "^0.34.30",
+    "dotenv": "^16.4.5",
+    "fastify": "^5.2.1",
+    "fastify-plugin": "^5.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "@types/supertest": "^6.0.3",
+    "prisma": "^6.6.0",
+    "supertest": "^7.1.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.8"
+  }
+}

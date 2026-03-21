@@ -1,4 +1,23 @@
 services:
+  backend:
+    build: ./apps/backend
+    container_name: git-backend
+    env_file:
+      - ./.env
+    environment:
+      - PORT=${BACKEND_PORT:-4000}
+    expose:
+      - "4000"
+    networks:
+      - gitnet
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:' + (process.env.PORT || 4000) + '/internal/health').then((res)=>process.exit(res.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+    restart: always
+
   git-server:
     build: ./infra/git-server
     container_name: git-server
