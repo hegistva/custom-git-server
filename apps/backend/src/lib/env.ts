@@ -1,6 +1,11 @@
 import dotenv from 'dotenv';
+import path from 'path';
 
+// Load from current directory (apps/backend/.env)
 dotenv.config();
+
+// Fallback to workspace root .env if running from apps/backend (which is the cwd during pnpm dev)
+dotenv.config({ path: path.resolve(process.cwd(), '../../.env') });
 
 const requireEnv = (key: string): string => {
   const value = process.env[key];
