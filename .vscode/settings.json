@@ -1,5 +1,17 @@
 {
     "chat.tools.terminal.autoApprove": {
         "pnpm": true
-    }
+    },
+    "sqltools.connections": [
+        {
+            "ssh": "Disabled",
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "GitServer",
+            "database": "git_platform",
+            "username": "git_platform"
+        }
+    ]
 }
