@@ -5,6 +5,7 @@ WORKDIR /app
 RUN corepack enable
 
 COPY package.json ./
+COPY prisma.config.ts ./
 COPY prisma ./prisma
 RUN pnpm install --frozen-lockfile=false
 

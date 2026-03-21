@@ -109,6 +109,9 @@ All services should show `healthy` or `running`. The `backend` depends on `postg
 Run pending migrations and the dev seed inside the running backend container:
 
 ```bash
+# If you pulled backend changes (e.g. Prisma config updates), rebuild backend first
+docker compose up -d --build backend
+
 # Apply all pending migrations
 docker compose exec backend pnpm db:migrate
 
