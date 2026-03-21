@@ -1,189 +1,152 @@
-# Custom Git Server
+# Custom Git Server — Fullstack Monorepo Guide
 
-A lightweight self-hosted Git server with:
+This repository contains the fullstack Git hosting platform:
 
-- SSH access on port `2222`
-- HTTPS Git Smart HTTP access behind Caddy on port `443`
-- HTTP Basic Auth enforced for all Git HTTP operations
+- `git-server` for SSH + Git Smart HTTP transport
+- `backend` API (`Fastify` + `Prisma` + `Postgres`)
+- `frontend` SPA (`Vite` + `React` + `TypeScript`)
+- `caddy` edge proxy with TLS and routing
 
----
-
-## Overview
-
-The stack runs two containers:
-
-- `git-server` (Alpine + OpenSSH + nginx + fcgiwrap + `git-http-backend`)
-- `caddy` (TLS termination and reverse proxy)
-
-Request flow:
+## Current Architecture
 
 ```text
-HTTPS client --> Caddy (TLS + Basic Auth) --> git-server:80 --> fcgiwrap --> git-http-backend
-SSH client   --> git-server:22 (sshd + git-shell)
+Browser/API client
+    -> Caddy (:443)
+         -> /app*        -> frontend:3000
+         -> /api/*       -> backend:4000
+         -> (git paths)  -> git-server:80
+
+Git SSH client
+    -> git-server:22 (host port 2222)
 ```
 
----
-
-## Project Structure
+## Repository Layout
 
 ```text
 .
+├── apps/
+│   ├── backend/        # Fastify API + Prisma
+│   └── frontend/       # React SPA + tests
+├── infra/git-server/   # nginx + sshd + fcgiwrap + git-http-backend
+├── docs/               # design and task tracking docs
+├── keys/               # bind-mounted authorized_keys (gitignored)
+├── repos/              # bind-mounted bare repos (gitignored)
 ├── Caddyfile
-├── Dockerfile
 ├── docker-compose.yml
-├── entrypoint.sh
-├── nginx.conf
-├── keys/
-│   └── authorized_keys
-├── repos/
-└── docs/
-    ├── README.md
-    ├── design-http-auth-https.md
-    └── tasks-http-auth-https.md
+├── package.json
+└── pnpm-workspace.yaml
 ```
 
----
+## Prerequisites
 
-## Security Model
+- Docker + Docker Compose
+- Node.js 20+
+- pnpm
 
-### SSH
+## Setup
 
-- Key-based auth via `keys/authorized_keys`
-- `git` user runs under `git-shell`
+Install workspace dependencies from repo root:
 
-### HTTPS (Git Smart HTTP)
+```bash
+pnpm install
+```
 
-- TLS is terminated by Caddy (`tls internal`)
-- Authentication is enforced by Caddy `basicauth`
-- Caddy forwards the authenticated user in `X-Remote-User`
-- nginx maps `X-Remote-User` to `REMOTE_USER` for `git-http-backend` so authenticated push works
-- Global unauthenticated push (`http.receivepack=true`) is not used
+Create local env file if missing:
 
----
+```bash
+cp .env.example .env
+```
 
-## Quick Start
+## Start / Stop the System
 
-### 1) Start the stack
+Start all services:
 
 ```bash
 docker compose up -d --build
 ```
 
-### 2) Hostname setup
-
-For local testing on the same machine, `localhost` works out of the box.
-
-For remote clients or custom naming, add this on each client machine:
-
-```text
-127.0.0.1 git.local
-```
-
-### 3) Trust Caddy local root CA
+Stop all services (keep data):
 
 ```bash
-docker compose cp caddy:/data/caddy/pki/authorities/local/root.crt ./caddy-root.crt
+docker compose down
 ```
 
-Linux:
+Stop and remove data volumes (destructive):
 
 ```bash
-sudo cp caddy-root.crt /usr/local/share/ca-certificates/caddy-root.crt
-sudo update-ca-certificates
+docker compose down -v
 ```
 
-macOS:
+Check status and logs:
 
 ```bash
-sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain caddy-root.crt
+docker compose ps
+docker compose logs -f
 ```
 
----
+## Access Points
 
-## Using HTTPS Git
+- Frontend UI: `https://localhost/app`
+- API (via Caddy): `https://localhost/api/*`
+- Git over HTTPS: `https://localhost/<owner>/<repo>.git`
+- Git over SSH: `ssh://git@localhost:2222/<owner>/<repo>.git`
 
-Clone (localhost):
+If local CA trust is not configured yet, browser/curl warnings are expected.
+
+## Testing
+
+### Backend
+
+Run backend tests:
 
 ```bash
-git clone https://gituser:changeme@localhost/my-docs.git
+pnpm --filter @custom-git-server/backend test
 ```
 
-Clone (custom hostname):
+Run backend typecheck:
 
 ```bash
-git clone https://gituser:changeme@git.local/my-docs.git
+pnpm --filter @custom-git-server/backend typecheck
 ```
 
-Set remote:
+### Frontend
+
+Run frontend unit tests:
 
 ```bash
-git remote set-url origin https://gituser:changeme@git.local/my-docs.git
+pnpm --filter @custom-git-server/frontend test
 ```
 
----
-
-## Verify Endpoint Behavior
-
-Quick checks (local):
+Run frontend coverage:
 
 ```bash
-# No credentials -> 401
-curl -s -o /dev/null -w "%{http_code}\n" -k "https://localhost/my-docs.git/info/refs?service=git-upload-pack"
-
-# Valid credentials -> 200
-curl -s -o /dev/null -w "%{http_code}\n" -k -u gituser:changeme "https://localhost/my-docs.git/info/refs?service=git-upload-pack"
-
-# HTTP -> HTTPS redirect -> 308
-curl -s -o /dev/null -w "%{http_code}\n" "http://localhost/my-docs.git/info/refs?service=git-upload-pack"
+pnpm --filter @custom-git-server/frontend test:cov
 ```
 
-Git protocol check over HTTPS:
+Run frontend e2e tests:
 
 ```bash
-GIT_SSL_NO_VERIFY=true git ls-remote https://gituser:changeme@localhost/my-docs.git
+pnpm --filter @custom-git-server/frontend test:e2e
 ```
 
-For local POC tests where the CA is not yet trusted, `-k` / `GIT_SSL_NO_VERIFY=true` is acceptable. For normal usage, trust the Caddy root CA and remove those flags.
-
----
-
-## Managing HTTP Auth Users
-
-Credentials are managed in `Caddyfile` with a bcrypt hash.
-
-Generate a password hash:
+### Whole workspace (Turborepo)
 
 ```bash
-docker run --rm caddy:2-alpine caddy hash-password --plaintext '<password>'
+pnpm build
+pnpm test
+pnpm lint
+pnpm typecheck
 ```
 
-Then update the `basicauth` block in `Caddyfile`:
+## Important Notes
 
-```caddy
-basicauth {
-    <username> <bcrypt-hash>
-}
-```
+- Internal backend routes under `/internal/*` are service-internal only.
+- Do not store secrets in code; keep values in `.env`.
+- Use `docs/tasks-fullstack.md` as the implementation progress checklist.
 
-Apply changes:
+## Related Documentation
 
-```bash
-docker compose restart caddy
-```
-
----
-
-## Ports
-
-| Purpose | Host Port | Service |
-|---|---:|---|
-| SSH Git | 2222 | `git-server` |
-| HTTP (redirect/entry) | 80 | `caddy` |
-| HTTPS Git | 443 | `caddy` |
-
----
-
-## Related Docs
-
+- [design-fullstack.md](design-fullstack.md)
+- [tasks-fullstack.md](tasks-fullstack.md)
 - [design-http-auth-https.md](design-http-auth-https.md)
 - [tasks-http-auth-https.md](tasks-http-auth-https.md)

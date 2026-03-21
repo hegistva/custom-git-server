@@ -42,6 +42,19 @@ services:
       start_period: 20s
     restart: always
 
+  frontend:
+    build: ./apps/frontend
+    container_name: git-frontend
+    env_file:
+      - ./.env
+    environment:
+      - VITE_API_BASE_URL=${VITE_API_BASE_URL:-https://localhost/api}
+    expose:
+      - "3000"
+    networks:
+      - gitnet
+    restart: always
+
   git-server:
     build: ./infra/git-server
     container_name: git-server
@@ -59,6 +72,7 @@ services:
     container_name: git-caddy
     depends_on:
       - git-server
+      - frontend
     ports:
       - "80:80"
       - "443:443"

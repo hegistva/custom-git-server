@@ -51,21 +51,21 @@ Reference design: [design-fullstack.md](design-fullstack.md)
 
 ## Phase 3 — Frontend Scaffold
 
-- [ ] Init `apps/frontend` with `pnpm create vite` (React + TypeScript template)
-- [ ] Configure TypeScript (`tsconfig.json`, strict mode, path aliases)
-- [ ] Add TanStack Query (`@tanstack/react-query`)
-- [ ] Add Zustand for auth state
-- [ ] Add React Router v7 (`react-router-dom`)
-- [ ] Add React Hook Form + Zod for form validation
-- [ ] Add `ky` for HTTP client (thin wrapper in `src/lib/api.ts`)
-- [ ] Add Vitest + Testing Library (`@testing-library/react`) for unit tests
-- [ ] Add Playwright for E2E tests
-- [ ] Scaffold page components as stubs: `LandingPage`, `LoginPage`, `RegisterPage`, `DashboardPage`, `SshKeysPage`, `TokensPage`, `NewRepositoryPage`, `RepositoryPage`
-- [ ] Implement route definitions with `React Router` (guarded routes for auth-required pages)
-- [ ] Add `AuthContext` and `ProtectedRoute` component
-- [ ] Add Dockerfile for frontend (`apps/frontend/Dockerfile`)
-- [ ] Add `frontend` service to `docker-compose.yml`
-- [ ] Verify frontend serves at expected path via Caddy
+- [x] Init `apps/frontend` with `pnpm create vite` (React + TypeScript template)
+- [x] Configure TypeScript (`tsconfig.json`, strict mode, path aliases)
+- [x] Add TanStack Query (`@tanstack/react-query`)
+- [x] Add Zustand for auth state
+- [x] Add React Router v7 (`react-router-dom`)
+- [x] Add React Hook Form + Zod for form validation
+- [x] Add `ky` for HTTP client (thin wrapper in `src/lib/api.ts`)
+- [x] Add Vitest + Testing Library (`@testing-library/react`) for unit tests
+- [x] Add Playwright for E2E tests
+- [x] Scaffold page components as stubs: `LandingPage`, `LoginPage`, `RegisterPage`, `DashboardPage`, `SshKeysPage`, `TokensPage`, `NewRepositoryPage`, `RepositoryPage`
+- [x] Implement route definitions with `React Router` (guarded routes for auth-required pages)
+- [x] Add `AuthContext` and `ProtectedRoute` component
+- [x] Add Dockerfile for frontend (`apps/frontend/Dockerfile`)
+- [x] Add `frontend` service to `docker-compose.yml`
+- [x] Verify frontend serves at expected path via Caddy
 
 ---
 
