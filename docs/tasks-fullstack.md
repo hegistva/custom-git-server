@@ -37,15 +37,15 @@ Reference design: [design-fullstack.md](design-fullstack.md)
 
 ## Phase 2 — Database Setup
 
-- [ ] Add `postgres` service to `docker-compose.yml` with `postgres_data` volume and health check
-- [ ] Configure Prisma `DATABASE_URL` via environment variable
-- [ ] Create initial Prisma schema: `User`, `SshKey`, `PersonalAccessToken`, `Repository`, `RefreshToken`
-- [ ] Create and apply initial migration (`prisma migrate dev --name init`)
-- [ ] Add `db:migrate` and `db:seed` scripts to `package.json`
-- [ ] Create seed file with at least one test user for local dev
-- [ ] Add Prisma client singleton to `src/lib/db.ts`
-- [ ] Verify `prisma migrate deploy` runs cleanly in compose on fresh volume
-- [ ] Verify DB connection from backend health check
+- [x] Add `postgres` service to `docker-compose.yml` with `postgres_data` volume and health check
+- [x] Configure Prisma `DATABASE_URL` via environment variable
+- [x] Create initial Prisma schema: `User`, `SshKey`, `PersonalAccessToken`, `Repository`, `RefreshToken`
+- [x] Create and apply initial migration (`prisma migrate dev --name init`)
+- [x] Add `db:migrate` and `db:seed` scripts to `package.json`
+- [x] Create seed file with at least one test user for local dev
+- [x] Add Prisma client singleton to `src/lib/db.ts`
+- [x] Verify `prisma migrate deploy` runs cleanly in compose on fresh volume
+- [x] Verify DB connection from backend health check
 
 ---
 

@@ -15,4 +15,4 @@ RUN pnpm build
 
 EXPOSE 4000
 
-CMD ["node", "dist/index.js"]
+CMD ["sh", "-c", "pnpm prisma migrate deploy && node dist/index.js"]

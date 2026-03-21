@@ -1,4 +1,23 @@
 services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: git-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-git_platform}
+      POSTGRES_USER: ${POSTGRES_USER:-git_platform}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - gitnet
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-git_platform} -d ${POSTGRES_DB:-git_platform}"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 15s
+    restart: always
+
   backend:
     build: ./apps/backend
     container_name: git-backend
@@ -10,12 +29,15 @@ services:
       - "4000"
     networks:
       - gitnet
+    depends_on:
+      postgres:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:' + (process.env.PORT || 4000) + '/internal/health').then((res)=>process.exit(res.ok?0:1)).catch(()=>process.exit(1))"]
       interval: 10s
       timeout: 3s
       retries: 5
-      start_period: 10s
+      start_period: 20s
     restart: always
 
   git-server:
@@ -47,6 +69,7 @@ services:
     restart: always
 
 volumes:
+  postgres_data:
   caddy_data:
   caddy_config:
 
