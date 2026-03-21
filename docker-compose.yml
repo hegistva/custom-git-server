@@ -1,6 +1,6 @@
 services:
   git-server:
-    build: .
+    build: ./infra/git-server
     container_name: git-server
     ports:
       - "2222:22"  # SSH

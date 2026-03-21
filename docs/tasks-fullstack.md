@@ -6,15 +6,15 @@ Reference design: [design-fullstack.md](design-fullstack.md)
 
 ## Phase 0 — Monorepo Root Setup
 
-- [ ] Move `Dockerfile`, `entrypoint.sh`, `nginx.conf` to `infra/git-server/`
-- [ ] Update `docker-compose.yml` build context for `git-server` to `./infra/git-server`
-- [ ] Create `apps/` directory stub (empty `backend/` and `frontend/` folders)
-- [ ] Create root `package.json` with `pnpm` workspace config and workspace scripts
-- [ ] Create `pnpm-workspace.yaml` pointing to `apps/*`
-- [ ] Create `turbo.json` with pipeline definitions for `build`, `dev`, `lint`, `test`
-- [ ] Create `.env.example` with all required variables documented
-- [ ] Create `.env` (gitignored) copied from `.env.example` for local dev
-- [ ] Verify `docker compose up -d --build` still works with moved infra files
+- [x] Move `Dockerfile`, `entrypoint.sh`, `nginx.conf` to `infra/git-server/`
+- [x] Update `docker-compose.yml` build context for `git-server` to `./infra/git-server`
+- [x] Create `apps/` directory stub (empty `backend/` and `frontend/` folders)
+- [x] Create root `package.json` with `pnpm` workspace config and workspace scripts
+- [x] Create `pnpm-workspace.yaml` pointing to `apps/*`
+- [x] Create `turbo.json` with pipeline definitions for `build`, `dev`, `lint`, `test`
+- [x] Create `.env.example` with all required variables documented
+- [x] Create `.env` (gitignored) copied from `.env.example` for local dev
+- [x] Verify `docker compose up -d --build` still works with moved infra files
 
 ---
 
