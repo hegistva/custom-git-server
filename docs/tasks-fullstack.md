@@ -73,29 +73,29 @@ Reference design: [design-fullstack.md](design-fullstack.md)
 
 ### Backend
 
-- [ ] Implement `POST /api/auth/register` with TypeBox validation, bcrypt hash (cost 12)
-- [ ] Implement `POST /api/auth/login` returning JWT access token + httpOnly refresh token cookie
-- [ ] Implement `POST /api/auth/refresh` validating refresh token, rotating tokens
-- [ ] Implement `POST /api/auth/logout` revoking refresh token in DB
-- [ ] Implement `GET /api/auth/me` returning current user (JWT guard)
-- [ ] Add rate limiting on all `/api/auth/*` routes (`@fastify/rate-limit`)
-- [ ] Write tests: register (happy path, duplicate username, duplicate email, invalid input)
-- [ ] Write tests: login (happy path, wrong password, unknown user)
-- [ ] Write tests: refresh (happy path, expired token, revoked token)
-- [ ] Write tests: logout (happy path, already logged out)
-- [ ] Write tests: me (authenticated, unauthenticated)
+- [x] Implement `POST /api/auth/register` with TypeBox validation, bcrypt hash (cost 12)
+- [x] Implement `POST /api/auth/login` returning JWT access token + httpOnly refresh token cookie
+- [x] Implement `POST /api/auth/refresh` validating refresh token, rotating tokens
+- [x] Implement `POST /api/auth/logout` revoking refresh token in DB
+- [x] Implement `GET /api/auth/me` returning current user (JWT guard)
+- [x] Add rate limiting on all `/api/auth/*` routes (`@fastify/rate-limit`)
+- [x] Write tests: register (happy path, duplicate username, duplicate email, invalid input)
+- [x] Write tests: login (happy path, wrong password, unknown user)
+- [x] Write tests: refresh (happy path, expired token, revoked token)
+- [x] Write tests: logout (happy path, already logged out)
+- [x] Write tests: me (authenticated, unauthenticated)
 
 ### Frontend
 
-- [ ] Implement `RegisterPage` form with validation (username, email, password, confirm password)
-- [ ] Implement `LoginPage` form with validation
-- [ ] Wire auth pages to backend via TanStack Query mutations
-- [ ] Implement token storage in auth store (access token in memory only)
-- [ ] Implement silent refresh on 401 responses in API client
-- [ ] Implement `ProtectedRoute` redirect to login on missing auth
-- [ ] Write component tests: RegisterPage renders and validates
-- [ ] Write component tests: LoginPage renders and validates
-- [ ] Write E2E test: full register → login flow
+- [x] Implement `RegisterPage` form with validation (username, email, password, confirm password)
+- [x] Implement `LoginPage` form with validation
+- [x] Wire auth pages to backend via TanStack Query mutations
+- [x] Implement token storage in auth store (access token in memory only)
+- [x] Implement silent refresh on 401 responses in API client
+- [x] Implement `ProtectedRoute` redirect to login on missing auth
+- [x] Write component tests: RegisterPage renders and validates
+- [x] Write component tests: LoginPage renders and validates
+- [x] Write E2E test: full register → login flow
 
 ---
 

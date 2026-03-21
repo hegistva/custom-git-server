@@ -3,6 +3,7 @@ import Fastify, { type FastifyInstance } from 'fastify';
 import { env } from './lib/env';
 import { registerCorePlugins } from './plugins/core';
 import prismaPlugin from './plugins/prisma';
+import authPlugin from './plugins/auth';
 import routes from './routes';
 
 export async function buildApp(): Promise<FastifyInstance> {
@@ -12,6 +13,7 @@ export async function buildApp(): Promise<FastifyInstance> {
 
   await app.register(registerCorePlugins);
   await app.register(prismaPlugin);
+  await app.register(authPlugin);
   await app.register(routes);
 
   return app;
