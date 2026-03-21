@@ -190,7 +190,7 @@ Reference design: [design-fullstack.md](design-fullstack.md)
 
 ## Phase 9 — Caddy Routing Update
 
-- [ ] Add `/api/*` → `backend:4000` route in Caddyfile
+- [x] Add `/api/*` → `backend:4000` route in Caddyfile
 - [ ] Add `/*` fallback → `frontend:3000` route for SPA (with proper index.html fallback)
 - [ ] Adjust `*.git` route to no longer require `basicauth` (auth moved to nginx auth_request)
 - [ ] Verify HTTPS redirect still works
