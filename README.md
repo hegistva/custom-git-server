@@ -199,6 +199,12 @@ With coverage report:
 pnpm --filter @custom-git-server/frontend test:cov
 ```
 
+With coverage report and CI threshold enforcement:
+
+```bash
+pnpm --filter @custom-git-server/frontend test:cov:ci
+```
+
 Playwright E2E tests (requires the full stack running):
 
 ```bash

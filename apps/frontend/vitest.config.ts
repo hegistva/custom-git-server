@@ -17,9 +17,11 @@ export default defineConfig({
       reporter: ['text', 'html'],
       include: ['src/**/*.{ts,tsx}'],
       exclude: ['src/main.tsx'],
-      thresholds: {
-        lines: 75,
-      },
+      thresholds: process.env.CI
+        ? {
+            lines: 75,
+          }
+        : undefined,
     },
   },
 })
