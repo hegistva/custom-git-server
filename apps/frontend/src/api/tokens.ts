@@ -1,13 +1,14 @@
-import { apiClient } from '@/lib/api'
+import { apiClient } from '../lib/api';
+import type { GenerateTokenPayload, GenerateTokenResponse, Token } from '../types/tokens';
 
-export interface TokenItem {
-  id: string
-  label: string
-  tokenPrefix: string
-  createdAt: string
-  revokedAt: string | null
-}
-
-export async function listTokens() {
-  return apiClient.get('tokens').json<TokenItem[]>()
-}
+export const tokensApi = {
+  list: async () => {
+    return apiClient.get('tokens').json<Token[]>();
+  },
+  generate: async (payload: GenerateTokenPayload) => {
+    return apiClient.post('tokens', { json: payload }).json<GenerateTokenResponse>();
+  },
+  revoke: async (id: string) => {
+    return apiClient.delete(`tokens/${id}`);
+  },
+};

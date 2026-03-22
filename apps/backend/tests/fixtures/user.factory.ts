@@ -36,5 +36,5 @@ export async function createTestUser(overrides: UserOverrides = {}): Promise<{
  * Call in afterEach to isolate tests.
  */
 export async function truncateAuthTables(): Promise<void> {
-  await db.$executeRawUnsafe(`TRUNCATE TABLE refresh_tokens, ssh_keys, users RESTART IDENTITY CASCADE`);
+  await db.$executeRawUnsafe(`TRUNCATE TABLE personal_access_tokens, refresh_tokens, ssh_keys, users RESTART IDENTITY CASCADE`);
 }

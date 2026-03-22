@@ -129,22 +129,22 @@ Reference design: [design-fullstack.md](design-fullstack.md)
 
 ### Backend
 
-- [ ] Implement `GET /api/tokens` returning token metadata (no raw token, prefix only)
-- [ ] Implement `POST /api/tokens` generating 32-byte random token, bcrypt-hashing, storing prefix
-- [ ] Implement `DELETE /api/tokens/:id` setting `revoked_at` timestamp
-- [ ] Implement `GET /internal/git-auth` decoding Basic Auth header, looking up user by username, checking PAT hash against non-revoked tokens, checking repo ownership
-- [ ] Write tests: list tokens (empty, populated)
-- [ ] Write tests: create token (happy path, label required)
-- [ ] Write tests: revoke token (happy path, not found, wrong owner)
-- [ ] Write tests: git-auth (valid PAT, wrong PAT, revoked PAT, unknown user, missing auth header)
+- [x] Implement `GET /api/tokens` returning token metadata (no raw token, prefix only)
+- [x] Implement `POST /api/tokens` generating 32-byte random token, bcrypt-hashing, storing prefix
+- [x] Implement `DELETE /api/tokens/:id` setting `revoked_at` timestamp
+- [x] Implement `GET /internal/git-auth` decoding Basic Auth header, looking up user by username, checking PAT hash against non-revoked tokens, checking repo ownership
+- [x] Write tests: list tokens (empty, populated)
+- [x] Write tests: create token (happy path, label required)
+- [x] Write tests: revoke token (happy path, not found, wrong owner)
+- [x] Write tests: git-auth (valid PAT, wrong PAT, revoked PAT, unknown user, missing auth header)
 
 ### Frontend
 
-- [ ] Implement `TokensPage`: list metadata, generate PAT with one-time reveal modal, revoke button
-- [ ] Wire to backend API
-- [ ] Add one-time reveal component (shows raw token once after creation, then hides)
-- [ ] Write component tests: token list renders, revoke triggers mutation
-- [ ] Write component tests: generate shows confirmation modal with token value
+- [x] Implement `TokensPage`: list metadata, generate PAT with one-time reveal modal, revoke button
+- [x] Wire to backend API
+- [x] Add one-time reveal component (shows raw token once after creation, then hides)
+- [x] Write component tests: token list renders, revoke triggers mutation
+- [x] Write component tests: generate shows confirmation modal with token value
 
 ---
 

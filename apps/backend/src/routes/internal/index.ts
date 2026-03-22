@@ -33,6 +33,39 @@ const internalRoutes: FastifyPluginAsync = async (app) => {
       }
     },
   });
+
+  app.get('/internal/git-auth', {
+    handler: async (request, reply) => {
+      const authHeader = request.headers.authorization;
+      if (!authHeader?.startsWith('Basic ')) {
+        return reply.code(401).send();
+      }
+
+      let decoded;
+      try {
+        decoded = Buffer.from(authHeader.slice(6), 'base64').toString('utf-8');
+      } catch {
+        return reply.code(401).send();
+      }
+
+      const [username, token] = decoded.split(':');
+      if (!username || !token) {
+        return reply.code(401).send();
+      }
+
+      // X-Original-URI from nginx auth_request or use raw URL for tests
+      const originalUri = request.headers['x-original-uri'] as string | undefined || request.url;
+
+      const { verifyGitAuth } = await import('../../services/internal.js');
+      const valid = await verifyGitAuth(username, token, originalUri);
+
+      if (!valid) {
+        return reply.code(401).send();
+      }
+
+      return reply.code(200).header('X-Auth-Username', username).send();
+    },
+  });
 };
 
 export default internalRoutes;

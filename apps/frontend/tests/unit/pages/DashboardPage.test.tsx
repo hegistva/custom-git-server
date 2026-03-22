@@ -71,6 +71,13 @@ describe('DashboardPage', () => {
     expect(link).toHaveAttribute('href', '/settings/ssh-keys')
   })
 
+  it('renders a link to manage personal access tokens', () => {
+    renderDashboardPage()
+    const link = screen.getByRole('link', { name: /manage personal access tokens/i })
+    expect(link).toBeInTheDocument()
+    expect(link).toHaveAttribute('href', '/settings/tokens')
+  })
+
   it('renders a log out button', () => {
     renderDashboardPage()
     expect(screen.getByRole('button', { name: /log out/i })).toBeInTheDocument()

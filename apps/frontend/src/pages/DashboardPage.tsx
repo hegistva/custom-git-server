@@ -20,7 +20,10 @@ export default function DashboardPage() {
   return (
     <main>
       <nav style={{ marginBottom: '2rem' }}>
-        <Link to="/settings/ssh-keys">Manage SSH Keys</Link>
+        <ul>
+          <li><Link to="/settings/ssh-keys">Manage SSH Keys</Link></li>
+          <li><Link to="/settings/tokens">Manage Personal Access Tokens</Link></li>
+        </ul>
       </nav>
       <h1>Dashboard</h1>
       <p>Welcome, {user?.username}!</p>
