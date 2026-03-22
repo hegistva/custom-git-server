@@ -179,14 +179,14 @@ Reference design: [design-fullstack.md](design-fullstack.md)
 
 ## Phase 8 — nginx Auth Request Integration
 
-- [ ] Add `auth_request` directive to nginx `*.git` location block
-- [ ] Add internal `/auth-check` location proxying to `backend:4000/internal/git-auth`
-- [ ] Map `X-Auth-Username` response header to `REMOTE_USER` FastCGI param
-- [ ] Add env var `GIT_AUTH_BACKEND` to `git-server` container
-- [ ] Implement conditional nginx config (template or env-switched) for Phase 1 parallel operation
-- [ ] Write integration test: valid PAT → 200 on Git info/refs endpoint
-- [ ] Write integration test: invalid PAT → 401
-- [ ] Write integration test: unauthenticated → 401
+- [x] Add `auth_request` directive to nginx `*.git` location block
+- [x] Add internal `/auth-check` location proxying to `backend:4000/internal/git-auth`
+- [x] Map `X-Auth-Username` response header to `REMOTE_USER` FastCGI param
+- [x] Add env var `GIT_AUTH_BACKEND` to `git-server` container
+- [x] Implement conditional nginx config (template or env-switched) for Phase 1 parallel operation
+- [x] Write integration test: valid PAT → 200 on Git info/refs endpoint
+- [x] Write integration test: invalid PAT → 401
+- [x] Write integration test: unauthenticated → 401
 - [ ] Verify `git clone`, `git push`, `git fetch` work end-to-end over HTTPS with PAT
 - [ ] Verify SSH clone / push unchanged after changes
 

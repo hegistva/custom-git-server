@@ -20,7 +20,8 @@ RUN mkdir -p /git-repos /home/git/.ssh && \
     chown -R git:git /git-repos /home/git/.ssh
 
 # 4. Configure Nginx for Git Smart HTTP
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY nginx.conf /etc/nginx/nginx.legacy.conf
+COPY nginx.auth-request.conf /etc/nginx/nginx.auth-request.conf
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 

@@ -1,5 +1,17 @@
 #!/bin/bash
 
+set -eu
+
+if [ "${GIT_AUTH_BACKEND:-false}" = "true" ]; then
+	cp /etc/nginx/nginx.auth-request.conf /etc/nginx/nginx.conf
+else
+	cp /etc/nginx/nginx.legacy.conf /etc/nginx/nginx.conf
+fi
+
+# Backend writes repositories on the shared volume as a different container user.
+# Trust the mounted repo path for git-http-backend operations in this container.
+su git -s /bin/sh -c "git config --global --replace-all safe.directory '*'"
+
 # 1. Ensure the run directory exists
 mkdir -p /run
 chown git:nginx /run
