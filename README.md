@@ -185,6 +185,18 @@ Watch mode:
 pnpm --filter @custom-git-server/backend test:watch
 ```
 
+With coverage report:
+
+```bash
+pnpm --filter @custom-git-server/backend test:cov
+```
+
+With coverage report and CI threshold enforcement:
+
+```bash
+pnpm --filter @custom-git-server/backend test:cov:ci
+```
+
 #### Frontend tests
 
 Unit and component tests (Vitest + Testing Library):
