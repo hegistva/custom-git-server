@@ -117,10 +117,7 @@ function requestInfoRefs(ctx: IntegrationContext, authHeader?: string): InfoRefs
   const result = spawnSync('docker', args, {
     cwd: repoRoot,
     encoding: 'utf8',
-    env: {
-      ...process.env,
-      GIT_AUTH_BACKEND: 'true',
-    },
+    env: process.env,
   });
 
   const output = `${result.stdout ?? ''}\n${result.stderr ?? ''}`;

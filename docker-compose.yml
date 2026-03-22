@@ -61,8 +61,6 @@ services:
   git-server:
     build: ./infra/git-server
     container_name: git-server
-    environment:
-      - GIT_AUTH_BACKEND=${GIT_AUTH_BACKEND:-false}
     ports:
       - "2222:22"  # SSH
     volumes:

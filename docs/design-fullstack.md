@@ -325,19 +325,18 @@ All routes are prefixed `/api`. Internal routes are only reachable within the Do
 
 - Static Caddy `basicauth` remains active
 - New services (`backend`, `frontend`, `postgres`) are added and reachable
-- nginx `auth_request` is configured but feature-flagged via env var `GIT_AUTH_BACKEND=false`
+- nginx `auth_request` is configured as the default and only Git HTTPS auth path
 - All existing SSH + HTTPS Git behavior is unaffected
 
 ### Phase 2 (Cutover)
 
-- `GIT_AUTH_BACKEND=true` activates nginx auth_request path
 - Static Caddy `basicauth` block is removed
 - Users must register and generate a PAT to clone/push over HTTPS
 - SSH keys uploaded via UI replace manual `authorized_keys` management
 
 ### Rollback
 
-- Set `GIT_AUTH_BACKEND=false` in `docker-compose.yml` and re-add staticm Caddy `basicauth`
+- Revert the Caddy/nginx auth-request changes in git history if a rollback is required
 - Postgres data and registered users are preserved across rollback
 
 ---
