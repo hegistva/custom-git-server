@@ -32,7 +32,7 @@ export function CreateRepositoryForm() {
       queryClient.invalidateQueries({ queryKey: queryKeys.repositories.list });
       navigate(`/repositories/${repo.name}`);
     },
-    onError: (error: any) => {
+    onError: (error: Error & { response?: { data?: { message?: string } } }) => {
       setError('root', {
         type: 'server',
         message: error.response?.data?.message || error.message || 'Failed to create repository',
