@@ -1,25 +1,14 @@
 git.local, localhost {
     tls internal
 
-    @api path /api /api/*    
+    @api path /api /api/*
     handle @api {
         reverse_proxy backend:4000
     }
 
-    @frontend path /app /app/*
-    handle @frontend {
-        uri strip_prefix /app
-        reverse_proxy frontend:3000
-    }
-
     @git path_regexp git ^/.+\.git(?:/.*)?$
     handle @git {
-        basicauth {
-            gituser $2a$14$hev0bkQ/dOAgNjtwwaMI5.JPVUihUH5wwC/vMuUBq4/W6k6L7R8My
-        }
-        reverse_proxy git-server:80 {
-            header_up X-Remote-User {http.auth.user.id}
-        }
+        reverse_proxy git-server:80
     }
 
     handle {

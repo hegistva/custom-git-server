@@ -195,12 +195,12 @@ Reference design: [design-fullstack.md](design-fullstack.md)
 ## Phase 9 — Caddy Routing Update
 
 - [x] Add `/api/*` → `backend:4000` route in Caddyfile
-- [ ] Add `/*` fallback → `frontend:3000` route for SPA (with proper index.html fallback)
-- [ ] Adjust `*.git` route to no longer require `basicauth` (auth moved to nginx auth_request)
-- [ ] Verify HTTPS redirect still works
-- [ ] Verify UI accessible at `https://localhost`
-- [ ] Verify API accessible at `https://localhost/api/*`
-- [ ] Verify Git HTTPS accessible at `https://localhost/<owner>/<repo>.git`
+- [x] Add `/*` fallback → `frontend:3000` route for SPA (with proper index.html fallback)
+- [x] Adjust `*.git` route to no longer require `basicauth` (auth moved to nginx auth_request)
+- [x] Verify HTTPS redirect still works
+- [x] Verify UI accessible at `https://localhost`
+- [x] Verify API accessible at `https://localhost/api/*`
+- [x] Verify Git HTTPS accessible at `https://localhost/<owner>/<repo>.git`
 
 ---
 

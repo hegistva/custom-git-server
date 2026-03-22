@@ -1,6 +1,7 @@
 {
     "chat.tools.terminal.autoApprove": {
-        "pnpm": true
+        "pnpm": true,
+        "docker compose": true
     },
     "sqltools.connections": [
         {
