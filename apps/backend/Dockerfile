@@ -16,6 +16,11 @@ COPY src ./src
 
 RUN pnpm build
 
+# Run backend as non-root with the same UID/GID used by git-server's git user.
+RUN chown -R 1000:1000 /app
+
+USER 1000:1000
+
 EXPOSE 4000
 
 CMD ["sh", "-c", "pnpm prisma migrate deploy && node dist/index.js"]
