@@ -3,8 +3,8 @@ import react from '@vitejs/plugin-react'
 import path from 'node:path'
 
 // https://vite.dev/config/
-export default defineConfig(({ command }) => ({
-  base: command === 'build' ? '/app/' : '/',
+export default defineConfig(() => ({
+  base: '/',
   plugins: [react()],
   resolve: {
     alias: {
