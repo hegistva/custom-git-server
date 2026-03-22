@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 
 import { logout } from '@/api/auth'
 import { useAuthStore } from '@/store/auth'
+import { RepositoryList } from '@/features/repositories/RepositoryList'
 
 export default function DashboardPage() {
   const navigate = useNavigate()
@@ -27,7 +28,7 @@ export default function DashboardPage() {
       </nav>
       <h1>Dashboard</h1>
       <p>Welcome, {user?.username}!</p>
-      <p>Repository list appears here in Phase 7.</p>
+      <RepositoryList />
       <button onClick={() => logoutMutation.mutate()} disabled={logoutMutation.isPending}>
         {logoutMutation.isPending ? 'Logging out...' : 'Log out'}
       </button>

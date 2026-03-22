@@ -3,6 +3,7 @@ import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import type { FastifyInstance } from 'fastify';
 import { buildApp } from '../../src/app';
 import { createTestUser, truncateAuthTables } from '../fixtures/user.factory';
+import { db } from '../../src/lib/db';
 
 let app: FastifyInstance;
 
@@ -58,6 +59,11 @@ describe('GET /internal/git-auth', () => {
     });
     const rawToken = addRes.json().rawToken;
 
+    const userInDb = await db.user.findUniqueOrThrow({ where: { username } });
+    await db.repository.create({
+      data: { ownerId: userInDb.id, name: 'my-repo', diskPath: 'mock' }
+    });
+
     const res = await app.inject({
       method: 'GET',
       url: '/internal/git-auth',
@@ -73,6 +79,12 @@ describe('GET /internal/git-auth', () => {
 
   it('wrong PAT returns 401', async () => {
     const { username, rawPassword } = await createTestUser();
+    
+    const userInDb = await db.user.findUniqueOrThrow({ where: { username } });
+    await db.repository.create({
+      data: { ownerId: userInDb.id, name: 'my-repo', diskPath: 'mock' }
+    });
+
     const res = await app.inject({
       method: 'GET',
       url: '/internal/git-auth',
@@ -97,6 +109,11 @@ describe('GET /internal/git-auth', () => {
     });
     const rawToken = addRes.json().rawToken;
     const tokenId = addRes.json().token.id;
+
+    const userInDb = await db.user.findUniqueOrThrow({ where: { username } });
+    await db.repository.create({
+      data: { ownerId: userInDb.id, name: 'my-repo', diskPath: 'mock' }
+    });
 
     await app.inject({
       method: 'DELETE',
@@ -127,6 +144,15 @@ describe('GET /internal/git-auth', () => {
       payload: { label: 'Git Token' },
     });
     const rawToken = addRes.json().rawToken;
+
+    // otherperson
+    await db.user.create({
+      data: { username: 'otherperson', email: 'other@example.com', passwordHash: 'mock' }
+    });
+    const otherInDb = await db.user.findUniqueOrThrow({ where: { username: 'otherperson' } });
+    await db.repository.create({
+      data: { ownerId: otherInDb.id, name: 'repo', diskPath: 'mock' }
+    });
 
     const res = await app.inject({
       method: 'GET',

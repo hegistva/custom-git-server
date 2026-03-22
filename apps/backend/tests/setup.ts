@@ -17,6 +17,6 @@ if (process.env.DATABASE_URL_TEST) {
 // Ensure required vars have safe test defaults if not already set
 process.env.JWT_SECRET ??= 'test-jwt-secret-not-for-production';
 process.env.BCRYPT_COST ??= '4'; // low cost for fast tests
-process.env.REPOS_PATH ??= '/tmp/test-repos';
-process.env.KEYS_PATH ??= '/tmp/test-keys/authorized_keys';
+process.env.REPOS_PATH = path.join(process.cwd(), '.tmp', 'test-repos');
+process.env.KEYS_PATH = path.join(process.cwd(), '.tmp', 'test-keys', 'authorized_keys');
 process.env.NODE_ENV ??= 'test';

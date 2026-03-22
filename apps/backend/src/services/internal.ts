@@ -43,12 +43,22 @@ export async function verifyGitAuth(username: string, token: string, originalUri
   if (uriParts.length >= 2) {
     const owner = uriParts[0];
 
+    const repoNameWithGit = uriParts[1];
+    if (!repoNameWithGit) {
+      return false; // Invalid URI
+    }
+    const repoName = repoNameWithGit.endsWith('.git') ? repoNameWithGit.slice(0, -4) : repoNameWithGit;
+
     // MVP: Must match owner username
     if (owner !== username) {
       return false; // Not owner
     }
 
-    // Phase 7 will add check for repo existence
+    const repo = user.repositories.find((r) => r.name === repoName);
+    if (!repo) {
+      return false; // Repository does not exist
+    }
+
     return true;
   }
 

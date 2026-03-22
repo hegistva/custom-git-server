@@ -12,6 +12,9 @@ import DashboardPage from '@/pages/DashboardPage'
 vi.mock('@/api/auth', () => ({
   logout: vi.fn(),
 }))
+vi.mock('@/api/repositories', () => ({
+  listRepositories: vi.fn(),
+}))
 
 const mockClearAuth = vi.fn()
 vi.mock('@/store/auth', () => ({
@@ -27,7 +30,9 @@ vi.mock('@/store/auth', () => ({
 }))
 
 import { logout } from '@/api/auth'
+import { listRepositories } from '@/api/repositories'
 const mockLogout = vi.mocked(logout)
+const mockListRepositories = vi.mocked(listRepositories)
 
 // ─── Render helpers ───────────────────────────────────────────────────────────
 
@@ -56,6 +61,7 @@ describe('DashboardPage', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
+    mockListRepositories.mockResolvedValue([])
   })
 
   it('renders the dashboard with personalized welcome message', () => {
@@ -81,6 +87,12 @@ describe('DashboardPage', () => {
   it('renders a log out button', () => {
     renderDashboardPage()
     expect(screen.getByRole('button', { name: /log out/i })).toBeInTheDocument()
+  })
+
+  it('renders Your Repositories section', async () => {
+    mockListRepositories.mockResolvedValueOnce([{ id: '1', name: 'my-test-repo', description: 'desc', isPrivate: true, createdAt: new Date().toISOString() }])
+    renderDashboardPage()
+    expect(await screen.findByText('my-test-repo')).toBeInTheDocument()
   })
 
   it('calls the logout API, clears auth state, and redirects when logged out', async () => {

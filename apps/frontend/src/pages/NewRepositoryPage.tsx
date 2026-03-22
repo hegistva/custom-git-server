@@ -1,8 +1,19 @@
+import { Link } from 'react-router-dom';
+import { CreateRepositoryForm } from '@/features/repositories/CreateRepositoryForm';
+
 export default function NewRepositoryPage() {
   return (
     <main>
-      <h1>Create Repository</h1>
-      <p>Repository creation form appears here in Phase 7.</p>
+      <nav style={{ marginBottom: '2rem' }}>
+        <ul>
+          <li><Link to="/dashboard">Back to Dashboard</Link></li>
+        </ul>
+      </nav>
+      <h1>Create a new repository</h1>
+      <p style={{ marginBottom: '2rem' }}>
+        A repository contains all project files, including the revision history.
+      </p>
+      <CreateRepositoryForm />
     </main>
-  )
+  );
 }

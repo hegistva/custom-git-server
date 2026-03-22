@@ -152,27 +152,28 @@ Reference design: [design-fullstack.md](design-fullstack.md)
 
 ### Backend
 
-- [ ] Implement `GET /api/repositories` returning user's repositories
-- [ ] Implement `POST /api/repositories` creating a bare repo on disk via `git init --bare`, recording in DB
-- [ ] Implement `GET /api/repositories/:owner/:name` returning repo metadata
-- [ ] Implement `DELETE /api/repositories/:owner/:name` removing DB record and deleting directory
-- [ ] Implement repo path resolver utility in `src/lib/repo.ts` (safe path construction, prefix validation)
-- [ ] Add volume mount for `repos/` directory in backend container
-- [ ] Update `/internal/git-auth` to verify repository exists and requester is owner (or member, future)
-- [ ] Write tests: list (empty, populated)
-- [ ] Write tests: create (happy path, duplicate name, invalid name format)
-- [ ] Write tests: get (happy path, not found, different owner)
-- [ ] Write tests: delete (happy path, not found, wrong owner)
+- [x] Implement `GET /api/repositories` returning user's repositories
+- [x] Implement `POST /api/repositories` creating a bare repo on disk via `git init --bare`, recording in DB
+- [x] Implement `GET /api/repositories/:owner/:name` returning repo metadata
+- [x] Implement `DELETE /api/repositories/:owner/:name` removing DB record and deleting directory
+- [x] Implement repo path resolver utility in `src/lib/repo.ts` (safe path construction, prefix validation)
+- [x] Add volume mount for `repos/` directory in backend container
+- [x] Update `/internal/git-auth` to verify repository exists and requester is owner (or member, future)
+- [x] Write tests: list (empty, populated)
+- [x] Write tests: create (happy path, duplicate name, invalid name format)
+- [x] Write tests: get (happy path, not found, different owner)
+- [x] Write tests: delete (happy path, not found, wrong owner)
 
 ### Frontend
 
-- [ ] Implement `DashboardPage`: repo list with links and "New repository" button
-- [ ] Implement `NewRepositoryPage`: form for name, description, private/public toggle
-- [ ] Implement `RepositoryPage`: metadata display + SSH clone URL + HTTPS clone URL with PAT instructions
-- [ ] Wire all pages to backend API
-- [ ] Write component tests: DashboardPage renders repo list
-- [ ] Write component tests: NewRepositoryPage validates name format and submits
-- [ ] Write E2E test: login → create repository → navigate to repo detail
+- [x] Implement `DashboardPage`: repo list with links and "New repository" button
+- [x] Implement `NewRepositoryPage`: form for name, description, private/public toggle
+- [x] Implement `RepositoryPage`: metadata display + SSH clone URL + HTTPS clone URL with PAT instructions
+- [x] Implement delete repository button with confirmation modal on `RepositoryPage`
+- [x] Wire all pages to backend API
+- [x] Write component tests: DashboardPage renders repo list
+- [x] Write component tests: NewRepositoryPage validates name format and submits
+- [x] Write E2E test: login → create repository → navigate to repo detail
 
 ---
 

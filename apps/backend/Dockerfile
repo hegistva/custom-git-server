@@ -4,6 +4,8 @@ WORKDIR /app
 
 RUN corepack enable
 
+RUN apk add --no-cache git
+
 COPY package.json ./
 COPY prisma.config.ts ./
 COPY prisma ./prisma
