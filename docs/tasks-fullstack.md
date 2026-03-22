@@ -105,22 +105,22 @@ Reference design: [design-fullstack.md](design-fullstack.md)
 
 ### Backend
 
-- [ ] Implement `GET /api/ssh-keys` returning user's keys
-- [ ] Implement `POST /api/ssh-keys` validating SSH public key format, computing fingerprint, appending to `authorized_keys`
-- [ ] Implement `DELETE /api/ssh-keys/:id` removing key from DB and `authorized_keys`
-- [ ] Implement SSH key parsing utility in `src/lib/ssh-key.ts` (parse format, extract fingerprint)
-- [ ] Add volume mount for `keys/` directory in backend container
-- [ ] Write tests: list (empty list, populated list)
-- [ ] Write tests: add (happy path, invalid key format, duplicate fingerprint)
-- [ ] Write tests: delete (happy path, not found, wrong owner)
+- [x] Implement `GET /api/ssh-keys` returning user's keys
+- [x] Implement `POST /api/ssh-keys` validating SSH public key format, computing fingerprint, appending to `authorized_keys`
+- [x] Implement `DELETE /api/ssh-keys/:id` removing key from DB and `authorized_keys`
+- [x] Implement SSH key parsing utility in `src/lib/ssh-key.ts` (parse format, extract fingerprint)
+- [x] Add volume mount for `keys/` directory in backend container
+- [x] Write tests: list (empty list, populated list)
+- [x] Write tests: add (happy path, invalid key format, duplicate fingerprint)
+- [x] Write tests: delete (happy path, not found, wrong owner)
 
 ### Frontend
 
-- [ ] Implement `SshKeysPage`: list view with add form and delete buttons
-- [ ] Wire to backend API via TanStack Query
-- [ ] Show fingerprint and creation date for each key
-- [ ] Write component tests: SshKeysPage renders key list
-- [ ] Write component tests: add key form validates and submits
+- [x] Implement `SshKeysPage`: list view with add form and delete buttons
+- [x] Wire to backend API via TanStack Query
+- [x] Show fingerprint and creation date for each key
+- [x] Write component tests: SshKeysPage renders key list
+- [x] Write component tests: add key form validates and submits
 
 ---
 

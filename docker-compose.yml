@@ -29,6 +29,9 @@ services:
       - PORT=${BACKEND_PORT:-4000}
     expose:
       - "4000"
+    volumes:
+      - ./keys:/data/keys
+      - ./repos:/git-repos
     networks:
       - gitnet
     depends_on:
