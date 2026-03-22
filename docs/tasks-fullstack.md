@@ -121,6 +121,7 @@ Reference design: [design-fullstack.md](design-fullstack.md)
 - [x] Show fingerprint and creation date for each key
 - [x] Write component tests: SshKeysPage renders key list
 - [x] Write component tests: add key form validates and submits
+- [x] Create routes and navigation to the ssh keys feature on the front-end and test it
 
 ---
 

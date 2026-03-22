@@ -64,6 +64,13 @@ describe('DashboardPage', () => {
     expect(screen.getByText(/welcome, testuser!/i)).toBeInTheDocument()
   })
 
+  it('renders a link to manage SSH keys', () => {
+    renderDashboardPage()
+    const link = screen.getByRole('link', { name: /manage ssh keys/i })
+    expect(link).toBeInTheDocument()
+    expect(link).toHaveAttribute('href', '/settings/ssh-keys')
+  })
+
   it('renders a log out button', () => {
     renderDashboardPage()
     expect(screen.getByRole('button', { name: /log out/i })).toBeInTheDocument()

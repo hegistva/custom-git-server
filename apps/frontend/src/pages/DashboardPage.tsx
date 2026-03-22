@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import { logout } from '@/api/auth'
 import { useAuthStore } from '@/store/auth'
@@ -19,6 +19,9 @@ export default function DashboardPage() {
 
   return (
     <main>
+      <nav style={{ marginBottom: '2rem' }}>
+        <Link to="/settings/ssh-keys">Manage SSH Keys</Link>
+      </nav>
       <h1>Dashboard</h1>
       <p>Welcome, {user?.username}!</p>
       <p>Repository list appears here in Phase 7.</p>

@@ -42,6 +42,13 @@ describe('SshKeysPage', () => {
     vi.mocked(sshKeysApi.list).mockResolvedValue([])
   })
 
+  it('renders a link back to the dashboard', async () => {
+    renderSshKeysPage()
+    const link = await screen.findByRole('link', { name: /back to dashboard/i })
+    expect(link).toBeInTheDocument()
+    expect(link).toHaveAttribute('href', '/dashboard')
+  })
+
   it('renders key list from api', async () => {
     vi.mocked(sshKeysApi.list).mockResolvedValueOnce([
       { id: '1', label: 'My test key', fingerprint: 'SHA256:abcd', createdAt: '2025-01-01T00:00:00.000Z' }
