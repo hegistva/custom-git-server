@@ -206,13 +206,13 @@ Reference design: [design-fullstack.md](design-fullstack.md)
 
 ## Phase 10 — Developer Experience Polish
 
-- [ ] Add `turbo run dev` to start all services in watch mode (frontend + backend hot reload)
-- [ ] Add `turbo run test` pipeline running backend Vitest + frontend Vitest + Playwright
-- [ ] Add `turbo run lint` via ESLint + Prettier across both apps
-- [ ] Add `turbo run build` for production builds
-- [ ] Add `docker compose --profile dev` override for hot-reload mounts
-- [ ] Document local dev setup in `docs/README.md`
-- [ ] Add `CONTRIBUTING.md` with environment setup steps
+- [x] Add `turbo run dev` to start all services in watch mode (frontend + backend hot reload)
+- [x] Add `turbo run test` pipeline running backend Vitest + frontend Vitest + Playwright
+- [x] Add `turbo run lint` via ESLint + Prettier across both apps
+- [x] Add `turbo run build` for production builds
+- [x] Add `docker compose --profile dev` override for hot-reload mounts
+- [x] Document local dev setup in `docs/README.md`
+- [x] Add `CONTRIBUTING.md` with environment setup steps
 
 ---
 

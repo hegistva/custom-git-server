@@ -16,6 +16,7 @@
     "test:watch": "vitest",
     "test:cov": "vitest run --coverage",
     "test:cov:ci": "CI=true vitest run --coverage",
+    "lint": "eslint . && pnpm format:check",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write \"{src,tests,prisma}/**/*.{ts,js,json,md,yml,yaml}\"",
     "format:check": "prettier --check \"{src,tests,prisma}/**/*.{ts,js,json,md,yml,yaml}\""
@@ -36,14 +37,18 @@
     "fastify-plugin": "^5.0.1"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.4",
     "@types/bcrypt": "^6.0.0",
     "@types/node": "^22.13.10",
     "@types/supertest": "^6.0.3",
     "@vitest/coverage-v8": "3.2.4",
+    "eslint": "^9.39.4",
+    "globals": "^17.4.0",
     "prisma": "^6.6.0",
     "supertest": "^7.1.0",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2",
+    "typescript-eslint": "^8.57.0",
     "vitest": "^3.0.8"
   }
 }

@@ -6,8 +6,9 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
+    "dev:stack": "docker compose -f docker-compose.yml -f docker-compose.dev.yml --profile dev up --build",
     "lint": "turbo run lint",
-    "test": "turbo run test",
+    "test": "turbo run test test:e2e",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "typecheck": "turbo run typecheck"

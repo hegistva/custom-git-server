@@ -1,0 +1,11 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "type": "command",
+        "command": "sh ./scripts/format-on-stop.sh",
+        "timeout": 600
+      }
+    ]
+  }
+}

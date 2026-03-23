@@ -57,6 +57,47 @@ Create local env file if missing:
 cp .env.example .env
 ```
 
+## Developer Workflows
+
+### Fast app iteration (watch mode)
+
+Run backend and frontend in hot-reload mode with Turborepo:
+
+```bash
+pnpm dev
+```
+
+This runs `turbo run dev`, which starts:
+
+- backend watcher (`tsx watch`)
+- frontend Vite dev server
+
+### Full stack dev profile (compose + hot reload)
+
+Use the dev compose override with profile-based mounts for backend/frontend source directories:
+
+```bash
+pnpm dev:stack
+```
+
+Equivalent command:
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.dev.yml --profile dev up --build
+```
+
+### Workspace quality gates
+
+```bash
+pnpm lint
+pnpm test
+pnpm build
+pnpm typecheck
+```
+
+`pnpm lint` runs ESLint and Prettier checks across backend and frontend.
+`pnpm test` runs backend Vitest, frontend Vitest, and frontend Playwright E2E through Turborepo.
+
 ## Start / Stop the System
 
 Start all services:
@@ -143,6 +184,7 @@ pnpm typecheck
 - Internal backend routes under `/internal/*` are service-internal only.
 - Do not store secrets in code; keep values in `.env`.
 - Use `docs/tasks-fullstack.md` as the implementation progress checklist.
+- Agent sessions auto-run formatting via `.github/hooks/format-on-stop.json`.
 
 ## Related Documentation
 

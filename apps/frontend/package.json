@@ -13,7 +13,7 @@
     "test:cov:ci": "CI=true vitest run --coverage",
     "test:e2e": "playwright test",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint .",
+    "lint": "eslint . && pnpm format:check",
     "format": "prettier --write \"{src,tests,public}/**/*.{ts,tsx,js,jsx,json,css,md,html,yml,yaml}\"",
     "format:check": "prettier --check \"{src,tests,public}/**/*.{ts,tsx,js,jsx,json,css,md,html,yml,yaml}\""
   },

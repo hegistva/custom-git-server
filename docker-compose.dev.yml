@@ -1,0 +1,18 @@
+services:
+  backend:
+    profiles:
+      - dev
+    command: pnpm dev
+    volumes:
+      - ./apps/backend:/app
+      - /app/node_modules
+      - ./keys:/data/keys
+      - ./repos:/git-repos
+
+  frontend:
+    profiles:
+      - dev
+    command: pnpm dev --host 0.0.0.0 --port 3000
+    volumes:
+      - ./apps/frontend:/app
+      - /app/node_modules

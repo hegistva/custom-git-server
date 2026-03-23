@@ -6,41 +6,41 @@ import {
   useMemo,
   useState,
   type PropsWithChildren,
-} from 'react'
+} from 'react';
 
-import { getMe, refreshSession } from '@/api/auth'
-import { useAuthStore } from '@/store/auth'
+import { getMe, refreshSession } from '@/api/auth';
+import { useAuthStore } from '@/store/auth';
 
 interface AuthContextValue {
-  isAuthBootstrapped: boolean
-  isAuthenticated: boolean
+  isAuthBootstrapped: boolean;
+  isAuthenticated: boolean;
 }
 
-const AuthContext = createContext<AuthContextValue | undefined>(undefined)
+const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 export function AuthProvider({ children }: PropsWithChildren) {
-  const accessToken = useAuthStore((state) => state.accessToken)
-  const setTokens = useAuthStore((state) => state.setTokens)
-  const clearAuth = useAuthStore((state) => state.clearAuth)
-  const setUser = useAuthStore((state) => state.setUser)
-  const [isAuthBootstrapped, setIsAuthBootstrapped] = useState(false)
+  const accessToken = useAuthStore((state) => state.accessToken);
+  const setTokens = useAuthStore((state) => state.setTokens);
+  const clearAuth = useAuthStore((state) => state.clearAuth);
+  const setUser = useAuthStore((state) => state.setUser);
+  const [isAuthBootstrapped, setIsAuthBootstrapped] = useState(false);
 
   const bootstrapAuth = useCallback(async () => {
     try {
-      const response = await refreshSession()
-      setTokens(response.accessToken)
-      const user = await getMe()
-      setUser(user)
+      const response = await refreshSession();
+      setTokens(response.accessToken);
+      const user = await getMe();
+      setUser(user);
     } catch {
-      clearAuth()
+      clearAuth();
     } finally {
-      setIsAuthBootstrapped(true)
+      setIsAuthBootstrapped(true);
     }
-  }, [clearAuth, setTokens, setUser])
+  }, [clearAuth, setTokens, setUser]);
 
   useEffect(() => {
-    void bootstrapAuth()
-  }, [bootstrapAuth])
+    void bootstrapAuth();
+  }, [bootstrapAuth]);
 
   const value = useMemo<AuthContextValue>(
     () => ({
@@ -48,17 +48,17 @@ export function AuthProvider({ children }: PropsWithChildren) {
       isAuthenticated: Boolean(accessToken),
     }),
     [accessToken, isAuthBootstrapped],
-  )
+  );
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuthContext() {
-  const context = useContext(AuthContext)
+  const context = useContext(AuthContext);
 
   if (!context) {
-    throw new Error('useAuthContext must be used within AuthProvider')
+    throw new Error('useAuthContext must be used within AuthProvider');
   }
 
-  return context
+  return context;
 }
