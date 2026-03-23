@@ -218,10 +218,10 @@ Reference design: [design-fullstack.md](design-fullstack.md)
 
 ## Phase 11 — Documentation Refresh
 
-- [ ] Update `docs/README.md` with new full-stack architecture, startup guide, and user workflow
-- [ ] Update `docs/design-http-auth-https.md` to mark static auth as deprecated
-- [ ] Update `docs/tasks-http-auth-https.md` to mark relevant tasks as superseded
-- [ ] Add architecture diagram to `docs/README.md`
+- [x] Update `docs/README.md` with new full-stack architecture, startup guide, and user workflow
+- [x] Update `docs/design-http-auth-https.md` to mark static auth as deprecated
+- [x] Update `docs/tasks-http-auth-https.md` to mark relevant tasks as superseded
+- [x] Add architecture diagram to `docs/README.md`
 
 ---
 
