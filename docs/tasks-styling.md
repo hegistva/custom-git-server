@@ -2,32 +2,38 @@
 
 Reference design: [design-styling.md](design-styling.md)
 
+Progress update:
+
+- `Phase 0` implementation is mostly complete; one cleanup item and some manual verification remain.
+- `Phase 1` component scaffolding is complete; deeper validation and accessibility review remain.
+- `Phase 2` layout scaffolding is complete; runtime/manual UX verification remains.
+
 ---
 
 ## Phase 0 — Tailwind Setup & Configuration
 
 ### Installation & Configuration
 
-- [ ] Add Tailwind CSS, PostCSS, and Autoprefixer to `apps/frontend/package.json` via `pnpm add -D tailwindcss postcss autoprefixer`
-- [ ] Create `apps/frontend/tailwind.config.ts` with:
+- [x] Add Tailwind CSS, PostCSS, and Autoprefixer to `apps/frontend/package.json` via `pnpm add -D tailwindcss postcss autoprefixer`
+- [x] Create `apps/frontend/tailwind.config.ts` with:
   - Blue-based color palette (primary #0066CC, grays, semantic colors)
-  - Dark mode strategy: `media` (respects system preference)
+  - Dark mode strategy: `class` (manual toggle + persisted preference)
   - Custom spacing, typography, and component utilities
   - Focus ring customization (2px offset)
-- [ ] Create `apps/frontend/postcss.config.js` with Tailwind and Autoprefixer plugins
-- [ ] Verify Vite CSS bundling in `apps/frontend/vite.config.ts` (no changes needed)
-- [ ] Create `apps/frontend/src/globals.css` with Tailwind directives:
+- [x] Create `apps/frontend/postcss.config.js` with Tailwind and Autoprefixer plugins
+- [x] Verify Vite CSS bundling in `apps/frontend/vite.config.ts` (no changes needed)
+- [x] Create `apps/frontend/src/globals.css` with Tailwind directives:
   ```css
   @tailwind base;
   @tailwind components;
   @tailwind utilities;
   ```
-- [ ] Update `apps/frontend/src/main.tsx` to import `globals.css` before App
+- [x] Update `apps/frontend/src/main.tsx` to import `globals.css` before App
 - [ ] Delete or archive `apps/frontend/src/index.css` and `apps/frontend/src/App.css`
 
 ### Dark Mode Hook
 
-- [ ] Create `apps/frontend/src/hooks/useDarkMode.ts`:
+- [x] Create `apps/frontend/src/hooks/useDarkMode.ts`:
   - Manages `dark` class on `<html>` element
   - Reads localStorage key `theme-preference` on mount
   - Falls back to `prefers-color-scheme` media query
@@ -37,7 +43,7 @@ Reference design: [design-styling.md](design-styling.md)
 
 ### Verification
 
-- [ ] Run `pnpm run dev` in `apps/frontend/` and verify no CSS errors
+- [x] Run `pnpm run dev` in `apps/frontend/` and verify no CSS errors
 - [ ] Inspect browser: check that Tailwind utilities are applied (search for `class="p-4 bg-white"` etc.)
 - [ ] Verify dark mode hook: toggle theme in console, observe `<html class="dark">` change
 - [ ] No console errors or warnings
@@ -52,7 +58,7 @@ Build 8 reusable, styled UI components in `apps/frontend/src/components/ui/`.
 
 ### Button Component
 
-- [ ] Create `apps/frontend/src/components/ui/Button.tsx`:
+- [x] Create `apps/frontend/src/components/ui/Button.tsx`:
   - Props: `variant` ('primary' | 'secondary' | 'danger' | 'ghost'), `size` ('sm' | 'md' | 'lg'), `disabled`, `loading`, `children`, `onClick`, `className`
   - Tailwind classes for each variant:
     - Primary: `bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white`
@@ -68,7 +74,7 @@ Build 8 reusable, styled UI components in `apps/frontend/src/components/ui/`.
 
 ### Input Component
 
-- [ ] Create `apps/frontend/src/components/ui/Input.tsx`:
+- [x] Create `apps/frontend/src/components/ui/Input.tsx`:
   - Props: `type` (text | email | password | number | url), `label?`, `error?`, `disabled`, `placeholder`, `value`, `onChange`, `className`
   - Base styles: `border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-300`
   - Error state: border-red-500, `aria-invalid="true"`, error text in red below input
@@ -80,7 +86,7 @@ Build 8 reusable, styled UI components in `apps/frontend/src/components/ui/`.
 
 ### FormGroup Component
 
-- [ ] Create `apps/frontend/src/components/ui/FormGroup.tsx`:
+- [x] Create `apps/frontend/src/components/ui/FormGroup.tsx`:
   - Props: `label`, `error?`, `required?`, `children` (usually Input)
   - Layout: `<div>` → `<label>` + `<div>` (children) + `<p>` (error in red)
   - Spacing: `gap-2` between label and input, `mt-1` before error text
@@ -91,7 +97,7 @@ Build 8 reusable, styled UI components in `apps/frontend/src/components/ui/`.
 
 ### Card Component
 
-- [ ] Create `apps/frontend/src/components/ui/Card.tsx`:
+- [x] Create `apps/frontend/src/components/ui/Card.tsx`:
   - Props: `children`, `className`, `interactive?` (adds hover effect)
   - Base: `bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg p-6`
   - Interactive: `hover:shadow-lg hover:border-blue-300 transition-all cursor-pointer`
@@ -101,7 +107,7 @@ Build 8 reusable, styled UI components in `apps/frontend/src/components/ui/`.
 
 ### Badge Component
 
-- [ ] Create `apps/frontend/src/components/ui/Badge.tsx`:
+- [x] Create `apps/frontend/src/components/ui/Badge.tsx`:
   - Props: `variant` ('success' | 'warning' | 'danger' | 'info'), `children`, `className`
   - Base: `inline-block rounded-full px-3 py-1 text-sm font-medium`
   - Variants:
@@ -114,7 +120,7 @@ Build 8 reusable, styled UI components in `apps/frontend/src/components/ui/`.
 
 ### Modal Component
 
-- [ ] Create `apps/frontend/src/components/ui/Modal.tsx`:
+- [x] Create `apps/frontend/src/components/ui/Modal.tsx`:
   - Props: `isOpen`, `onClose`, `title`, `children`, `footer?` (optional footer with buttons)
   - Structure: overlay (fixed, full-screen, semi-transparent) + centered dialog box
   - Overlay: `fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center`
@@ -129,7 +135,7 @@ Build 8 reusable, styled UI components in `apps/frontend/src/components/ui/`.
 
 ### Alert Component
 
-- [ ] Create `apps/frontend/src/components/ui/Alert.tsx`:
+- [x] Create `apps/frontend/src/components/ui/Alert.tsx`:
   - Props: `variant` ('success' | 'error' | 'warning' | 'info'), `title?`, `message`, `onClose?`, `children`
   - Base: `p-4 rounded-lg border-l-4 flex items-start gap-3`
   - Variants (left border color + background):
@@ -145,7 +151,7 @@ Build 8 reusable, styled UI components in `apps/frontend/src/components/ui/`.
 
 ### Link Component
 
-- [ ] Create `apps/frontend/src/components/ui/Link.tsx`:
+- [x] Create `apps/frontend/src/components/ui/Link.tsx`:
   - Wrapper around React Router's `<Link>` or HTML `<a>`
   - Props: `to` (if router link) or `href`, `children`, `className`, `external?` (adds target="\_blank" rel="noopener noreferrer")
   - Base: `text-blue-600 hover:text-blue-800 hover:underline dark:text-blue-400 dark:hover:text-blue-300 focus:ring-2 focus:ring-blue-300 focus:ring-offset-2 focus:outline-none`
@@ -155,7 +161,7 @@ Build 8 reusable, styled UI components in `apps/frontend/src/components/ui/`.
 
 ### Verification
 
-- [ ] All 8 components render without errors: `pnpm run dev`
+- [x] All 8 components render without errors: `pnpm run dev`
 - [ ] Each component has props properly typed (no `any`)
 - [ ] All components work in both light and dark modes (toggle with `useDarkMode()` in dev)
 - [ ] Focus rings visible on all interactive components (Tab through each)
@@ -171,20 +177,19 @@ Build 2 foundational layout components that wrap pages.
 
 ### AppShell Component
 
-- [ ] Create `apps/frontend/src/components/layout/AppShell.tsx`:
+- [x] Create `apps/frontend/src/components/layout/AppShell.tsx`:
   - Wraps entire app, includes Navbar, main content area, optional footer
   - Imports and uses `useDarkMode` hook to provide dark mode context
   - Structure: `<div>` → `<Navbar />` + `<main>` (children) + optional `<footer>`
   - Main content: `min-h-screen bg-white dark:bg-gray-900`
   - Ensures dark class on `<html>` element (via hook)
-- [ ] Update `apps/frontend/src/App.tsx`:
-  - Wrap all routes inside `<AppShell>` component
-  - Example: `<AppShell><Routes>...</Routes></AppShell>`
+- [x] Update routing composition to wrap app routes inside `<AppShell>`
+  - Implemented in `apps/frontend/src/pages/routes.tsx`
 - [ ] Verify: Background color changes when dark mode toggled, AppShell renders without errors
 
 ### Navbar Component
 
-- [ ] Create `apps/frontend/src/components/layout/Navbar.tsx`:
+- [x] Create `apps/frontend/src/components/layout/Navbar.tsx`:
   - Header: 56px height, white background (light) / dark background (dark)
   - Structure: flex row, `items-center justify-between`, padding 16px 32px
   - Left side: Logo/brand (text or SVG), 24px height
@@ -194,16 +199,16 @@ Build 2 foundational layout components that wrap pages.
   - Dark mode toggle: Sun/Moon icon button, calls `toggleDarkMode()`
   - Active route: underline in blue (#0066CC), other routes: gray text
   - Border bottom: 1px solid #E0E0E0 (light) / #333333 (dark)
-- [ ] Use React Router's `useLocation()` to determine active route
-- [ ] Mobile menu: Hamburger icon, click toggles menu visibility, links stack vertically
+- [x] Use React Router's `useLocation()` to determine active route
+- [x] Mobile menu: Hamburger icon, click toggles menu visibility, links stack vertically
 - [ ] Test: Verify navbar spans full width, active link underlined, dark mode toggle works, hamburger appears on mobile (DevTools)
 - [ ] Verify: Logo and nav links aligned correctly, user menu clickable, theme toggle updates page
 
 ### Verification
 
-- [ ] AppShell wraps Routes, dark mode hook works, background color changes on toggle
-- [ ] Navbar renders with logo, nav links, user menu, and theme toggle
-- [ ] Active route underlined in blue, hover state on links
+- [x] AppShell wraps Routes
+- [x] Navbar renders with logo, nav links, and theme toggle
+- [x] Active route underlined in blue, hover state on links
 - [ ] Dark mode toggle button updates theme and persists
 - [ ] Mobile hamburger menu appears on small screens, collapses/expands menu
 
