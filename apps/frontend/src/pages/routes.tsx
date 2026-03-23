@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { useAuthContext } from '@/components/auth/AuthContext';
+import { AppShell } from '@/components/layout/AppShell';
 
 const LandingPage = lazy(() => import('@/pages/LandingPage'));
 const LoginPage = lazy(() => import('@/pages/LoginPage'));
@@ -26,37 +27,39 @@ function PublicOnlyRoute({ children }: { children: ReactNode }) {
 export function AppRoutes() {
   return (
     <BrowserRouter>
-      <Suspense fallback={<p>Loading page…</p>}>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route
-            path="/login"
-            element={
-              <PublicOnlyRoute>
-                <LoginPage />
-              </PublicOnlyRoute>
-            }
-          />
-          <Route
-            path="/register"
-            element={
-              <PublicOnlyRoute>
-                <RegisterPage />
-              </PublicOnlyRoute>
-            }
-          />
+      <AppShell>
+        <Suspense fallback={<p>Loading page…</p>}>
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route
+              path="/login"
+              element={
+                <PublicOnlyRoute>
+                  <LoginPage />
+                </PublicOnlyRoute>
+              }
+            />
+            <Route
+              path="/register"
+              element={
+                <PublicOnlyRoute>
+                  <RegisterPage />
+                </PublicOnlyRoute>
+              }
+            />
 
-          <Route element={<ProtectedRoute />}>
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/settings/ssh-keys" element={<SshKeysPage />} />
-            <Route path="/settings/tokens" element={<TokensPage />} />
-            <Route path="/repositories/new" element={<NewRepositoryPage />} />
-            <Route path="/repositories/:name" element={<RepositoryPage />} />
-          </Route>
+            <Route element={<ProtectedRoute />}>
+              <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/settings/ssh-keys" element={<SshKeysPage />} />
+              <Route path="/settings/tokens" element={<TokensPage />} />
+              <Route path="/repositories/new" element={<NewRepositoryPage />} />
+              <Route path="/repositories/:name" element={<RepositoryPage />} />
+            </Route>
 
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </Suspense>
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Suspense>
+      </AppShell>
     </BrowserRouter>
   );
 }
