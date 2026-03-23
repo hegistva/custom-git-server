@@ -2,35 +2,39 @@ import { useEffect, useState } from 'react';
 
 type Theme = 'light' | 'dark' | 'auto';
 
+const getStoredTheme = (): Theme => {
+  if (typeof window === 'undefined') {
+    return 'auto';
+  }
+
+  const storedTheme = window.localStorage.getItem('theme-preference');
+
+  if (storedTheme === 'light' || storedTheme === 'dark' || storedTheme === 'auto') {
+    return storedTheme;
+  }
+
+  return 'auto';
+};
+
+const getSystemPrefersDark = () => {
+  if (typeof window === 'undefined') {
+    return false;
+  }
+
+  return window.matchMedia('(prefers-color-scheme: dark)').matches;
+};
+
+const resolveDarkMode = (theme: Theme) => {
+  return theme === 'dark' || (theme === 'auto' && getSystemPrefersDark());
+};
+
 /**
  * Hook to manage dark mode theme preference.
  * Persists user preference to localStorage with key 'theme-preference'.
  * Falls back to system preference (prefers-color-scheme) if auto.
  */
 export function useDarkMode() {
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
-  const [isHydrated, setIsHydrated] = useState<boolean>(false);
-
-  // Initialize theme on mount
-  useEffect(() => {
-    const storedTheme = localStorage.getItem('theme-preference') as Theme | null;
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-    let shouldBeDark = false;
-
-    if (storedTheme === 'dark') {
-      shouldBeDark = true;
-    } else if (storedTheme === 'light') {
-      shouldBeDark = false;
-    } else {
-      // Auto: use system preference
-      shouldBeDark = prefersDark;
-    }
-
-    setIsDarkMode(shouldBeDark);
-    applyTheme(shouldBeDark);
-    setIsHydrated(true);
-  }, []);
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => resolveDarkMode(getStoredTheme()));
 
   const applyTheme = (dark: boolean) => {
     const htmlElement = document.documentElement;
@@ -41,21 +45,22 @@ export function useDarkMode() {
     }
   };
 
+  useEffect(() => {
+    applyTheme(isDarkMode);
+  }, [isDarkMode]);
+
   const toggleDarkMode = () => {
     setIsDarkMode((prev) => {
       const newValue = !prev;
-      applyTheme(newValue);
       localStorage.setItem('theme-preference', newValue ? 'dark' : 'light');
       return newValue;
     });
   };
 
   const setTheme = (theme: Theme) => {
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const shouldBeDark = theme === 'dark' || (theme === 'auto' && prefersDark);
+    const shouldBeDark = resolveDarkMode(theme);
 
     setIsDarkMode(shouldBeDark);
-    applyTheme(shouldBeDark);
     localStorage.setItem('theme-preference', theme);
   };
 
@@ -63,6 +68,6 @@ export function useDarkMode() {
     isDarkMode,
     toggleDarkMode,
     setTheme,
-    isHydrated,
+    isHydrated: true,
   };
 }

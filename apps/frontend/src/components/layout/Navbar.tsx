@@ -1,30 +1,46 @@
 import React, { useState } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
-import { useDarkMode } from '@/hooks/useDarkMode';
 
-const navLinks = [
-  { label: 'Home', path: '/app' },
-  { label: 'Dashboard', path: '/app/dashboard' },
-  { label: 'Repositories', path: '/app/dashboard' },
-  { label: 'SSH Keys', path: '/app/ssh-keys' },
-  { label: 'Tokens', path: '/app/tokens' },
+import { useAuthContext } from '@/components/auth/AuthContext';
+import { useDarkMode } from '@/hooks/useDarkMode';
+import { useAuthStore } from '@/store/auth';
+
+const authenticatedLinks = [
+  { label: 'Dashboard', path: '/dashboard', matchPrefixes: ['/dashboard', '/repositories'] },
+  { label: 'SSH Keys', path: '/settings/ssh-keys', matchPrefixes: ['/settings/ssh-keys'] },
+  { label: 'Tokens', path: '/settings/tokens', matchPrefixes: ['/settings/tokens'] },
+];
+
+const publicLinks = [
+  { label: 'Home', path: '/', matchPrefixes: ['/'] },
+  { label: 'Sign In', path: '/login', matchPrefixes: ['/login'] },
+  { label: 'Register', path: '/register', matchPrefixes: ['/register'] },
 ];
 
 export const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   const { isDarkMode, toggleDarkMode } = useDarkMode();
+  const { isAuthenticated } = useAuthContext();
+  const user = useAuthStore((state) => state.user);
 
-  const isActivePath = (path: string) => {
-    return location.pathname === path || location.pathname.startsWith(path + '/');
+  const navLinks = isAuthenticated ? authenticatedLinks : publicLinks;
+
+  const isActivePath = (matchPrefixes: string[]) => {
+    return matchPrefixes.some((prefix) => {
+      if (prefix === '/') {
+        return location.pathname === '/';
+      }
+
+      return location.pathname === prefix || location.pathname.startsWith(prefix + '/');
+    });
   };
 
   return (
     <nav className="bg-white dark:bg-gray-900 border-b border-gray-300 dark:border-gray-700 sticky top-0 z-40">
       <div className="flex items-center justify-between h-14 px-4 sm:px-6 lg:px-8">
-        {/* Logo */}
         <RouterLink
-          to="/app"
+          to={isAuthenticated ? '/dashboard' : '/'}
           className="flex items-center gap-2 text-xl font-bold text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
         >
           <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -33,14 +49,13 @@ export const Navbar: React.FC = () => {
           <span className="hidden sm:inline">Git Server</span>
         </RouterLink>
 
-        {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-1">
           {navLinks.map((link) => (
             <RouterLink
               key={link.path}
               to={link.path}
               className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                isActivePath(link.path)
+                isActivePath(link.matchPrefixes)
                   ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400'
                   : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100'
               }`}
@@ -50,9 +65,13 @@ export const Navbar: React.FC = () => {
           ))}
         </div>
 
-        {/* Right Side: Theme Toggle + Mobile Menu */}
         <div className="flex items-center gap-3">
-          {/* Theme Toggle */}
+          {isAuthenticated && user ? (
+            <span className="hidden lg:inline text-sm text-gray-600 dark:text-gray-400">
+              Signed in as{' '}
+              <span className="font-medium text-gray-900 dark:text-gray-100">{user.username}</span>
+            </span>
+          ) : null}
           <button
             onClick={toggleDarkMode}
             className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
@@ -69,7 +88,6 @@ export const Navbar: React.FC = () => {
             )}
           </button>
 
-          {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 transition-colors"
@@ -96,7 +114,6 @@ export const Navbar: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile Navigation Menu */}
       {mobileMenuOpen && (
         <div className="md:hidden border-t border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
           <div className="px-4 py-3 space-y-1">
@@ -106,7 +123,7 @@ export const Navbar: React.FC = () => {
                 to={link.path}
                 onClick={() => setMobileMenuOpen(false)}
                 className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
-                  isActivePath(link.path)
+                  isActivePath(link.matchPrefixes)
                     ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
                     : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100'
                 }`}
@@ -114,6 +131,11 @@ export const Navbar: React.FC = () => {
                 {link.label}
               </RouterLink>
             ))}
+            {isAuthenticated && user ? (
+              <p className="px-3 pt-2 text-sm text-gray-600 dark:text-gray-400">
+                Signed in as {user.username}
+              </p>
+            ) : null}
           </div>
         </div>
       )}

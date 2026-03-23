@@ -1,17 +1,12 @@
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
-interface LinkProps {
+interface LinkProps extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> {
   to?: string;
   href?: string;
   external?: boolean;
   children: React.ReactNode;
   className?: string;
-  onClick?: React.MouseEventHandler<HTMLAnchorElement>;
-  title?: string;
-  id?: string;
-  style?: React.CSSProperties;
-  [key: string]: any;
 }
 
 export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>((props, ref) => {

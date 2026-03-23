@@ -13,7 +13,8 @@ interface FormGroupProps {
 
 export const FormGroup = React.forwardRef<HTMLDivElement, FormGroupProps>(
   ({ label, required = false, error, helperText, children, inputProps, htmlFor }, ref) => {
-    const inputId = htmlFor || `form-group-${Math.random().toString(36).substr(2, 9)}`;
+    const generatedId = React.useId();
+    const inputId = htmlFor || generatedId;
 
     return (
       <div ref={ref} className="w-full">

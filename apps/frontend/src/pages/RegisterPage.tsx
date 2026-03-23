@@ -1,11 +1,17 @@
 import { useMutation } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
+import { Alert } from '@/components/ui/Alert';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { FormGroup } from '@/components/ui/FormGroup';
+import { Input } from '@/components/ui/Input';
+import { Link } from '@/components/ui/Link';
 import { register as registerUser } from '@/api/auth';
-import { useAuthStore } from '@/store/auth';
 import { registerSchema, type RegisterInput } from '@/lib/schemas/auth';
+import { useAuthStore } from '@/store/auth';
 import type { ApiError } from '@/types/api';
 
 export default function RegisterPage() {
@@ -41,69 +47,89 @@ export default function RegisterPage() {
   };
 
   return (
-    <main>
-      <h1>Create an account</h1>
-
-      <form onSubmit={handleSubmit(onSubmit)} noValidate>
-        <div>
-          <label htmlFor="username">Username</label>
-          <input
-            id="username"
-            aria-label="Username"
-            autoComplete="username"
-            {...register('username')}
-          />
-          {formState.errors.username && <p role="alert">{formState.errors.username.message}</p>}
+    <div className="flex min-h-[calc(100vh-12rem)] items-center justify-center py-10">
+      <div className="w-full max-w-xl space-y-6">
+        <div className="space-y-2 text-center">
+          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-blue-700 dark:text-blue-300">
+            Create your account
+          </p>
+          <h1 className="text-3xl font-bold tracking-tight text-gray-950 dark:text-white">
+            Start managing repositories from one place
+          </h1>
+          <p className="text-sm text-gray-600 dark:text-gray-300">
+            Register once, then add SSH keys and personal access tokens as needed.
+          </p>
         </div>
 
-        <div>
-          <label htmlFor="email">Email</label>
-          <input
-            id="email"
-            aria-label="Email"
-            type="email"
-            autoComplete="email"
-            {...register('email')}
-          />
-          {formState.errors.email && <p role="alert">{formState.errors.email.message}</p>}
-        </div>
+        <Card className="border-gray-200 shadow-sm dark:border-gray-800">
+          <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5">
+            <div className="grid gap-5 sm:grid-cols-2">
+              <FormGroup label="Username" required htmlFor="username">
+                <Input
+                  id="username"
+                  aria-label="Username"
+                  autoComplete="username"
+                  error={formState.errors.username?.message}
+                  {...register('username')}
+                />
+              </FormGroup>
 
-        <div>
-          <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            aria-label="Password"
-            type="password"
-            autoComplete="new-password"
-            {...register('password')}
-          />
-          {formState.errors.password && <p role="alert">{formState.errors.password.message}</p>}
-        </div>
+              <FormGroup label="Email" required htmlFor="email">
+                <Input
+                  id="email"
+                  aria-label="Email"
+                  type="email"
+                  autoComplete="email"
+                  error={formState.errors.email?.message}
+                  {...register('email')}
+                />
+              </FormGroup>
+            </div>
 
-        <div>
-          <label htmlFor="confirmPassword">Confirm password</label>
-          <input
-            id="confirmPassword"
-            aria-label="Confirm password"
-            type="password"
-            autoComplete="new-password"
-            {...register('confirmPassword')}
-          />
-          {formState.errors.confirmPassword && (
-            <p role="alert">{formState.errors.confirmPassword.message}</p>
-          )}
-        </div>
+            <div className="grid gap-5 sm:grid-cols-2">
+              <FormGroup label="Password" required htmlFor="password">
+                <Input
+                  id="password"
+                  aria-label="Password"
+                  type="password"
+                  autoComplete="new-password"
+                  error={formState.errors.password?.message}
+                  {...register('password')}
+                />
+              </FormGroup>
 
-        {formState.errors.root && <p role="alert">{formState.errors.root.message}</p>}
+              <FormGroup label="Confirm password" required htmlFor="confirmPassword">
+                <Input
+                  id="confirmPassword"
+                  aria-label="Confirm password"
+                  type="password"
+                  autoComplete="new-password"
+                  error={formState.errors.confirmPassword?.message}
+                  {...register('confirmPassword')}
+                />
+              </FormGroup>
+            </div>
 
-        <button type="submit" disabled={mutation.isPending}>
-          {mutation.isPending ? 'Creating account…' : 'Create account'}
-        </button>
-      </form>
+            {formState.errors.root ? (
+              <Alert
+                variant="error"
+                message={formState.errors.root.message ?? 'Registration failed.'}
+              />
+            ) : null}
 
-      <p>
-        Already have an account? <Link to="/login">Sign in</Link>
-      </p>
-    </main>
+            <Button type="submit" size="lg" className="w-full" loading={mutation.isPending}>
+              Create account
+            </Button>
+          </form>
+        </Card>
+
+        <p className="text-center text-sm text-gray-600 dark:text-gray-300">
+          Already have an account?{' '}
+          <Link to="/login" className="font-medium">
+            Sign in
+          </Link>
+        </p>
+      </div>
+    </div>
   );
 }

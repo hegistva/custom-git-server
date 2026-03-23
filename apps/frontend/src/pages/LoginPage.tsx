@@ -1,11 +1,17 @@
 import { useMutation } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
+import { Alert } from '@/components/ui/Alert';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { FormGroup } from '@/components/ui/FormGroup';
+import { Input } from '@/components/ui/Input';
+import { Link } from '@/components/ui/Link';
 import { login } from '@/api/auth';
-import { useAuthStore } from '@/store/auth';
 import { loginSchema, type LoginInput } from '@/lib/schemas/auth';
+import { useAuthStore } from '@/store/auth';
 import type { ApiError } from '@/types/api';
 
 export default function LoginPage() {
@@ -41,43 +47,60 @@ export default function LoginPage() {
   };
 
   return (
-    <main>
-      <h1>Sign in to your account</h1>
-
-      <form onSubmit={handleSubmit(onSubmit)} noValidate>
-        <div>
-          <label htmlFor="username">Username</label>
-          <input
-            id="username"
-            aria-label="Username"
-            autoComplete="username"
-            {...register('username')}
-          />
-          {formState.errors.username && <p role="alert">{formState.errors.username.message}</p>}
+    <div className="flex min-h-[calc(100vh-12rem)] items-center justify-center py-10">
+      <div className="w-full max-w-md space-y-6">
+        <div className="space-y-2 text-center">
+          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-blue-700 dark:text-blue-300">
+            Welcome back
+          </p>
+          <h1 className="text-3xl font-bold tracking-tight text-gray-950 dark:text-white">
+            Sign in to your account
+          </h1>
+          <p className="text-sm text-gray-600 dark:text-gray-300">
+            Continue to your repositories, SSH keys, and access tokens.
+          </p>
         </div>
 
-        <div>
-          <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            aria-label="Password"
-            type="password"
-            autoComplete="current-password"
-            {...register('password')}
-          />
-          {formState.errors.password && <p role="alert">{formState.errors.password.message}</p>}
-        </div>
+        <Card className="border-gray-200 shadow-sm dark:border-gray-800">
+          <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5">
+            <FormGroup label="Username" required htmlFor="username">
+              <Input
+                id="username"
+                aria-label="Username"
+                autoComplete="username"
+                error={formState.errors.username?.message}
+                {...register('username')}
+              />
+            </FormGroup>
 
-        {formState.errors.root && <p role="alert">{formState.errors.root.message}</p>}
+            <FormGroup label="Password" required htmlFor="password">
+              <Input
+                id="password"
+                aria-label="Password"
+                type="password"
+                autoComplete="current-password"
+                error={formState.errors.password?.message}
+                {...register('password')}
+              />
+            </FormGroup>
 
-        <button type="submit" disabled={mutation.isPending}>
-          {mutation.isPending ? 'Signing in…' : 'Sign in'}
-        </button>
-      </form>
+            {formState.errors.root ? (
+              <Alert variant="error" message={formState.errors.root.message ?? 'Login failed.'} />
+            ) : null}
 
-      <p>
-        Don&apos;t have an account? <Link to="/register">Create one</Link>
-      </p>
-    </main>
+            <Button type="submit" size="lg" className="w-full" loading={mutation.isPending}>
+              Sign in
+            </Button>
+          </form>
+        </Card>
+
+        <p className="text-center text-sm text-gray-600 dark:text-gray-300">
+          Don&apos;t have an account?{' '}
+          <Link to="/register" className="font-medium">
+            Create one
+          </Link>
+        </p>
+      </div>
+    </div>
   );
 }
