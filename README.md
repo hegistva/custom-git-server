@@ -58,12 +58,12 @@ cp .env.example .env
 
 Edit `.env` and replace the placeholder secrets:
 
-| Variable | Description |
-|---|---|
-| `POSTGRES_PASSWORD` | Postgres password (required, no default) |
-| `DATABASE_URL` | Full Prisma connection string (update password to match) |
-| `DATABASE_URL_TEST` | Connection string for the test database |
-| `JWT_SECRET` | Secret for signing JWT tokens |
+| Variable            | Description                                              |
+| ------------------- | -------------------------------------------------------- |
+| `POSTGRES_PASSWORD` | Postgres password (required, no default)                 |
+| `DATABASE_URL`      | Full Prisma connection string (update password to match) |
+| `DATABASE_URL_TEST` | Connection string for the test database                  |
+| `JWT_SECRET`        | Secret for signing JWT tokens                            |
 
 The remaining variables have safe defaults for local development; see `.env.example` for all options.
 
@@ -86,13 +86,13 @@ docker compose up -d --build
 
 Services started:
 
-| Service | Purpose | Exposed |
-|---|---|---|
-| `caddy` | TLS termination + routing | `80`, `443` |
-| `backend` | Fastify API | internal via Caddy `/api/*` |
-| `frontend` | React SPA | internal via Caddy `/*` |
-| `git-server` | SSH + Git Smart HTTP | SSH on `2222` |
-| `postgres` | Database | `127.0.0.1:5432` |
+| Service      | Purpose                   | Exposed                     |
+| ------------ | ------------------------- | --------------------------- |
+| `caddy`      | TLS termination + routing | `80`, `443`                 |
+| `backend`    | Fastify API               | internal via Caddy `/api/*` |
+| `frontend`   | React SPA                 | internal via Caddy `/*`     |
+| `git-server` | SSH + Git Smart HTTP      | SSH on `2222`               |
+| `postgres`   | Database                  | `127.0.0.1:5432`            |
 
 Wait for all services to become healthy:
 
@@ -298,13 +298,13 @@ docker compose exec postgres psql -U git_platform -d git_platform
 
 ### 9. Access Points
 
-| Endpoint | URL |
-|---|---|
-| Web UI | `https://localhost` |
-| API | `https://localhost/api` |
-| API health | `https://localhost/api/internal/health` |
-| Git HTTPS | `https://localhost/<owner>/<repo>.git` |
-| Git SSH | `ssh://git@localhost:2222/<owner>/<repo>.git` |
+| Endpoint   | URL                                           |
+| ---------- | --------------------------------------------- |
+| Web UI     | `https://localhost`                           |
+| API        | `https://localhost/api`                       |
+| API health | `https://localhost/api/internal/health`       |
+| Git HTTPS  | `https://localhost/<owner>/<repo>.git`        |
+| Git SSH    | `ssh://git@localhost:2222/<owner>/<repo>.git` |
 
 Caddy uses a self-signed certificate for `localhost`; accept the browser warning or add it to your trust store.
 

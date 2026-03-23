@@ -25,6 +25,7 @@ export interface Example {
 ```
 
 Rules:
+
 - Types must match the actual API response shape exactly.
 - Never use `any` or `unknown` for parsed API responses.
 - Use `interface` for object shapes, `type` for unions/aliases.
@@ -108,6 +109,7 @@ export function ExampleList() {
 ```
 
 Rules:
+
 - Use TanStack Query for all server data — never `useEffect` for fetching.
 - Mutations must call `queryClient.invalidateQueries` on success.
 - Use shadcn/ui components (Button, Input, Card, etc.) from `src/components/ui/`.
@@ -134,6 +136,7 @@ export default function ExamplePage() {
 ```
 
 Rules:
+
 - Page components are the only files that can have default exports.
 - Every page-level component is lazy-loaded via `React.lazy`.
 - Pages are thin — they compose features, not implement them.
@@ -154,11 +157,13 @@ const ExamplePage = React.lazy(() => import('./ExamplePage.js'));
 In `apps/frontend/tests/unit/<domain>/`:
 
 Required for every page component:
+
 - Smoke test (renders without throwing)
 - Visible content test (key headings/labels present)
 - Form validation test (invalid inputs show errors)
 
 Required for every form component:
+
 - All fields render
 - Validation on empty submit
 - Loading state disables submit

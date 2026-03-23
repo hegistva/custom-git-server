@@ -1,14 +1,14 @@
 export interface AuthUser {
-  id: string
-  username: string
-  email: string
+  id: string;
+  username: string;
+  email: string;
 }
 
 export interface RefreshResponse {
-  accessToken: string
+  accessToken: string;
 }
 
 export interface LoginResponse {
-  accessToken: string
-  user: AuthUser
+  accessToken: string;
+  user: AuthUser;
 }

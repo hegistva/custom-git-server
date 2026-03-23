@@ -24,12 +24,12 @@ cp .env.example .env
 
 Edit `.env` and fill in the required secrets:
 
-| Variable | Description |
-|---|---|
-| `POSTGRES_PASSWORD` | Postgres password (required, no default) |
-| `DATABASE_URL` | Full Prisma connection string (update password to match) |
-| `DATABASE_URL_TEST` | Connection string for the test database |
-| `JWT_SECRET` | Secret for signing JWT tokens |
+| Variable            | Description                                              |
+| ------------------- | -------------------------------------------------------- |
+| `POSTGRES_PASSWORD` | Postgres password (required, no default)                 |
+| `DATABASE_URL`      | Full Prisma connection string (update password to match) |
+| `DATABASE_URL_TEST` | Connection string for the test database                  |
+| `JWT_SECRET`        | Secret for signing JWT tokens                            |
 
 The remaining variables have safe defaults for local development.
 
@@ -62,6 +62,7 @@ docker compose exec backend pnpm db:seed
 ```
 
 The seed creates a dev user:
+
 - Username: `devuser`
 - Email: `dev@example.com`
 - Password: `devpassword`
@@ -70,12 +71,12 @@ The seed creates a dev user:
 
 ## Step 6 — Verify Access Points
 
-| Endpoint | URL |
-|---|---|
-| Web UI | `https://localhost` |
-| API health | `https://localhost/api/internal/health` |
-| Git HTTPS | `https://localhost/<owner>/<repo>.git` |
-| Git SSH | `ssh://git@localhost:2222/<owner>/<repo>.git` |
+| Endpoint   | URL                                           |
+| ---------- | --------------------------------------------- |
+| Web UI     | `https://localhost`                           |
+| API health | `https://localhost/api/internal/health`       |
+| Git HTTPS  | `https://localhost/<owner>/<repo>.git`        |
+| Git SSH    | `ssh://git@localhost:2222/<owner>/<repo>.git` |
 
 > Caddy uses a self-signed certificate. Accept the browser warning or trust `caddy-root.crt`.
 

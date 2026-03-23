@@ -12,4 +12,4 @@ export const queryKeys = {
     list: ['repositories'] as const,
     byName: (name: string) => ['repositories', name] as const,
   },
-}
+};

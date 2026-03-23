@@ -10,7 +10,7 @@ export default function TokensPage() {
       </nav>
       <h1>Personal Access Tokens</h1>
       <p>Tokens you have generated that can be used to access the API.</p>
-      
+
       <GenerateTokenForm />
       <hr style={{ margin: '2rem 0' }} />
       <TokensList />

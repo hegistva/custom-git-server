@@ -27,11 +27,13 @@ pnpm --filter @custom-git-server/backend test
 ```
 
 Watch mode:
+
 ```bash
 pnpm --filter @custom-git-server/backend test:watch
 ```
 
 With coverage:
+
 ```bash
 pnpm --filter @custom-git-server/backend test:cov
 ```
@@ -45,6 +47,7 @@ pnpm --filter @custom-git-server/frontend test
 ```
 
 With coverage report:
+
 ```bash
 pnpm --filter @custom-git-server/frontend test:cov
 ```
@@ -60,19 +63,20 @@ docker compose up -d --build
 ```
 
 Then:
+
 ```bash
 pnpm --filter @custom-git-server/frontend test:e2e
 ```
 
 ## Interpreting Results
 
-| Result | Action |
-|---|---|
-| All tests pass | ✅ Mark phase tasks complete |
-| Test fails — missing implementation | Implement the missing code, then re-run |
-| Test fails — test is wrong | Fix the test to match the correct contract, do not change production code to pass wrong tests |
-| Coverage below gate | Add missing test cases until gate is met |
-| Type errors or lint warnings | Fix before marking done |
+| Result                              | Action                                                                                        |
+| ----------------------------------- | --------------------------------------------------------------------------------------------- |
+| All tests pass                      | ✅ Mark phase tasks complete                                                                  |
+| Test fails — missing implementation | Implement the missing code, then re-run                                                       |
+| Test fails — test is wrong          | Fix the test to match the correct contract, do not change production code to pass wrong tests |
+| Coverage below gate                 | Add missing test cases until gate is met                                                      |
+| Type errors or lint warnings        | Fix before marking done                                                                       |
 
 ## After Any Test Failure
 

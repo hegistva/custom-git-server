@@ -1,26 +1,26 @@
-import { Suspense, lazy, type ReactNode } from 'react'
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { Suspense, lazy, type ReactNode } from 'react';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 
-import { ProtectedRoute } from '@/components/auth/ProtectedRoute'
-import { useAuthContext } from '@/components/auth/AuthContext'
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { useAuthContext } from '@/components/auth/AuthContext';
 
-const LandingPage = lazy(() => import('@/pages/LandingPage'))
-const LoginPage = lazy(() => import('@/pages/LoginPage'))
-const RegisterPage = lazy(() => import('@/pages/RegisterPage'))
-const DashboardPage = lazy(() => import('@/pages/DashboardPage'))
-const SshKeysPage = lazy(() => import('@/pages/SshKeysPage'))
-const TokensPage = lazy(() => import('@/pages/TokensPage'))
-const NewRepositoryPage = lazy(() => import('@/pages/NewRepositoryPage'))
-const RepositoryPage = lazy(() => import('@/pages/RepositoryPage'))
+const LandingPage = lazy(() => import('@/pages/LandingPage'));
+const LoginPage = lazy(() => import('@/pages/LoginPage'));
+const RegisterPage = lazy(() => import('@/pages/RegisterPage'));
+const DashboardPage = lazy(() => import('@/pages/DashboardPage'));
+const SshKeysPage = lazy(() => import('@/pages/SshKeysPage'));
+const TokensPage = lazy(() => import('@/pages/TokensPage'));
+const NewRepositoryPage = lazy(() => import('@/pages/NewRepositoryPage'));
+const RepositoryPage = lazy(() => import('@/pages/RepositoryPage'));
 
 function PublicOnlyRoute({ children }: { children: ReactNode }) {
-  const { isAuthenticated } = useAuthContext()
+  const { isAuthenticated } = useAuthContext();
 
   if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />
+    return <Navigate to="/dashboard" replace />;
   }
 
-  return children
+  return children;
 }
 
 export function AppRoutes() {
@@ -58,5 +58,5 @@ export function AppRoutes() {
         </Routes>
       </Suspense>
     </BrowserRouter>
-  )
+  );
 }

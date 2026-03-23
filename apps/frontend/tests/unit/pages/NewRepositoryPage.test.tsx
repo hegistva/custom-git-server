@@ -23,7 +23,9 @@ import { createRepository } from '@/api/repositories';
 const mockCreateRepository = vi.mocked(createRepository);
 
 function makeQueryClient() {
-  return new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } });
+  return new QueryClient({
+    defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+  });
 }
 
 function renderNewRepositoryPage() {
@@ -55,7 +57,7 @@ describe('NewRepositoryPage', () => {
 
   it('shows validation errors for invalid name', async () => {
     renderNewRepositoryPage();
-    
+
     const submitBtn = screen.getByRole('button', { name: /Create repository/i });
     await user.click(submitBtn);
 
@@ -64,17 +66,21 @@ describe('NewRepositoryPage', () => {
     const nameInput = screen.getByLabelText(/Repository name \*/i);
     await user.type(nameInput, 'inv@lid name!');
     await user.click(submitBtn);
-    
+
     expect(await screen.findByText(/Invalid name format/i)).toBeInTheDocument();
   });
 
   it('submits successfully with valid data', async () => {
     mockCreateRepository.mockResolvedValueOnce({
-      id: '1', name: 'my-repo', description: null, isPrivate: true, createdAt: new Date().toISOString()
+      id: '1',
+      name: 'my-repo',
+      description: null,
+      isPrivate: true,
+      createdAt: new Date().toISOString(),
     });
 
     renderNewRepositoryPage();
-    
+
     const nameInput = screen.getByLabelText(/Repository name \*/i);
     await user.type(nameInput, 'my-repo');
 

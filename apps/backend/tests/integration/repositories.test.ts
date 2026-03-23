@@ -40,7 +40,11 @@ afterAll(async () => {
 describe('Repositories API', () => {
   it('GET /api/repositories returns empty list initially', async () => {
     const { username, rawPassword } = await createTestUser();
-    const loginRes = await app.inject({ method: 'POST', url: '/api/auth/login', payload: { username, password: rawPassword } });
+    const loginRes = await app.inject({
+      method: 'POST',
+      url: '/api/auth/login',
+      payload: { username, password: rawPassword },
+    });
     const auth = loginRes.json().accessToken;
 
     const res = await app.inject({
@@ -48,21 +52,25 @@ describe('Repositories API', () => {
       url: '/api/repositories',
       headers: { authorization: `Bearer ${auth}` },
     });
-    
+
     expect(res.statusCode).toBe(200);
     expect(res.json()).toEqual([]);
   });
 
   it('POST /api/repositories creates a repo', async () => {
     const { username, rawPassword, id: ownerId } = await createTestUser();
-    const loginRes = await app.inject({ method: 'POST', url: '/api/auth/login', payload: { username, password: rawPassword } });
+    const loginRes = await app.inject({
+      method: 'POST',
+      url: '/api/auth/login',
+      payload: { username, password: rawPassword },
+    });
     const auth = loginRes.json().accessToken;
 
     const res = await app.inject({
       method: 'POST',
       url: '/api/repositories',
       headers: { authorization: `Bearer ${auth}` },
-      payload: { name: 'my-repo', description: 'desc', isPrivate: true }
+      payload: { name: 'my-repo', description: 'desc', isPrivate: true },
     });
     if (res.statusCode !== 201) throw new Error(JSON.stringify(res.json()));
 
@@ -70,7 +78,9 @@ describe('Repositories API', () => {
     expect(res.json().name).toBe('my-repo');
 
     // check db
-    const repoInDb = await db.repository.findUnique({ where: { ownerId_name: { ownerId, name: 'my-repo' } } });
+    const repoInDb = await db.repository.findUnique({
+      where: { ownerId_name: { ownerId, name: 'my-repo' } },
+    });
     expect(repoInDb).not.toBeNull();
 
     // check disk
@@ -80,7 +90,11 @@ describe('Repositories API', () => {
 
   it('GET /api/repositories/:owner/:name returns repo metadata', async () => {
     const { username, rawPassword } = await createTestUser();
-    const loginRes = await app.inject({ method: 'POST', url: '/api/auth/login', payload: { username, password: rawPassword } });
+    const loginRes = await app.inject({
+      method: 'POST',
+      url: '/api/auth/login',
+      payload: { username, password: rawPassword },
+    });
     const auth = loginRes.json().accessToken;
 
     // Create repo
@@ -88,7 +102,7 @@ describe('Repositories API', () => {
       method: 'POST',
       url: '/api/repositories',
       headers: { authorization: `Bearer ${auth}` },
-      payload: { name: 'my-repo' }
+      payload: { name: 'my-repo' },
     });
     if (createRes.statusCode !== 201) throw new Error(JSON.stringify(createRes.json()));
 
@@ -97,21 +111,25 @@ describe('Repositories API', () => {
       url: `/api/repositories/${username}/my-repo`,
       headers: { authorization: `Bearer ${auth}` },
     });
-    
+
     expect(res.statusCode).toBe(200);
     expect(res.json().name).toBe('my-repo');
   });
 
   it('DELETE /api/repositories/:owner/:name deletes a repo', async () => {
     const { username, rawPassword, id: ownerId } = await createTestUser();
-    const loginRes = await app.inject({ method: 'POST', url: '/api/auth/login', payload: { username, password: rawPassword } });
+    const loginRes = await app.inject({
+      method: 'POST',
+      url: '/api/auth/login',
+      payload: { username, password: rawPassword },
+    });
     const auth = loginRes.json().accessToken;
 
     const createRes = await app.inject({
       method: 'POST',
       url: '/api/repositories',
       headers: { authorization: `Bearer ${auth}` },
-      payload: { name: 'my-repo' }
+      payload: { name: 'my-repo' },
     });
     if (createRes.statusCode !== 201) throw new Error(JSON.stringify(createRes.json()));
 
@@ -120,10 +138,12 @@ describe('Repositories API', () => {
       url: `/api/repositories/${username}/my-repo`,
       headers: { authorization: `Bearer ${auth}` },
     });
-    
+
     expect(res.statusCode).toBe(204);
 
-    const repoInDb = await db.repository.findUnique({ where: { ownerId_name: { ownerId, name: 'my-repo' } } });
+    const repoInDb = await db.repository.findUnique({
+      where: { ownerId_name: { ownerId, name: 'my-repo' } },
+    });
     expect(repoInDb).toBeNull();
   });
 });

@@ -79,13 +79,13 @@ export async function deleteSshKey(userId: string, keyId: string) {
     throw new SshKeyNotFoundError('SSH key not found');
   }
 
-  // Remove from filesystem first to avoid orphaned access. 
+  // Remove from filesystem first to avoid orphaned access.
   // If FS fails, we throw and leave the DB intact.
   try {
     const rawContent = await fs.readFile(env.keysPath, 'utf-8');
     const lines = rawContent.split(/\r?\n/);
     // Find the exact line or lines containing the publicKey
-    const newLines = lines.filter(line => !line.includes(key.publicKey));
+    const newLines = lines.filter((line) => !line.includes(key.publicKey));
     if (newLines.length !== lines.length) {
       await fs.writeFile(env.keysPath, newLines.join('\n') + '\n', 'utf-8');
     }

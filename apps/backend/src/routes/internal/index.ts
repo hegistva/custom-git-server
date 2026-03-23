@@ -29,7 +29,9 @@ const internalRoutes: FastifyPluginAsync = async (app) => {
         return { status: 'ok' as const, service: 'backend' };
       } catch (err) {
         request.log.error({ err }, 'Readiness check: database not reachable');
-        return reply.code(503).send({ status: 'error' as const, message: 'database not reachable' });
+        return reply
+          .code(503)
+          .send({ status: 'error' as const, message: 'database not reachable' });
       }
     },
   });
@@ -54,7 +56,7 @@ const internalRoutes: FastifyPluginAsync = async (app) => {
       }
 
       // X-Original-URI from nginx auth_request or use raw URL for tests
-      const originalUri = request.headers['x-original-uri'] as string | undefined || request.url;
+      const originalUri = (request.headers['x-original-uri'] as string | undefined) || request.url;
 
       const { verifyGitAuth } = await import('../../services/internal.js');
       const valid = await verifyGitAuth(username, token, originalUri);

@@ -11,14 +11,14 @@
 A **self-hosted Git hosting platform** implemented as a `pnpm` monorepo with Turborepo.  
 It mirrors the core of GitHub/Gitea but is intentionally minimal (MVP scope).
 
-| Layer | Technology |
-|---|---|
-| Edge / TLS | Caddy |
-| Git transport | nginx + sshd + fcgiwrap + git-http-backend |
-| API | Fastify + Prisma + TypeScript (strict) |
-| Frontend | Vite + React 18 + TypeScript (strict) |
-| Database | Postgres 16 via Prisma ORM |
-| Package manager | pnpm workspaces + Turborepo |
+| Layer           | Technology                                 |
+| --------------- | ------------------------------------------ |
+| Edge / TLS      | Caddy                                      |
+| Git transport   | nginx + sshd + fcgiwrap + git-http-backend |
+| API             | Fastify + Prisma + TypeScript (strict)     |
+| Frontend        | Vite + React 18 + TypeScript (strict)      |
+| Database        | Postgres 16 via Prisma ORM                 |
+| Package manager | pnpm workspaces + Turborepo                |
 
 ---
 
@@ -70,13 +70,13 @@ It mirrors the core of GitHub/Gitea but is intentionally minimal (MVP scope).
 
 ## Key Documents (read before working)
 
-| Document | Purpose |
-|---|---|
-| [`docs/design-fullstack.md`](../docs/design-fullstack.md) | Authoritative architecture, DB schema, API surface, auth model |
-| [`docs/tasks-fullstack.md`](../docs/tasks-fullstack.md) | Phase-by-phase task checklist — canonical source of truth for progress |
-| [`.github/instructions/backend.instructions.md`](../.github/instructions/backend.instructions.md) | Fastify/Prisma/TypeScript rules and testing requirements |
-| [`.github/instructions/frontend.instructions.md`](../.github/instructions/frontend.instructions.md) | React/Vite/TanStack rules and testing requirements |
-| [`.github/instructions/database.instructions.md`](../.github/instructions/database.instructions.md) | Prisma schema, migration, and seed rules |
+| Document                                                                                            | Purpose                                                                |
+| --------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| [`docs/design-fullstack.md`](../docs/design-fullstack.md)                                           | Authoritative architecture, DB schema, API surface, auth model         |
+| [`docs/tasks-fullstack.md`](../docs/tasks-fullstack.md)                                             | Phase-by-phase task checklist — canonical source of truth for progress |
+| [`.github/instructions/backend.instructions.md`](../.github/instructions/backend.instructions.md)   | Fastify/Prisma/TypeScript rules and testing requirements               |
+| [`.github/instructions/frontend.instructions.md`](../.github/instructions/frontend.instructions.md) | React/Vite/TanStack rules and testing requirements                     |
+| [`.github/instructions/database.instructions.md`](../.github/instructions/database.instructions.md) | Prisma schema, migration, and seed rules                               |
 
 ---
 
@@ -101,15 +101,16 @@ git CLI (SSH)
 
 ## Authentication Summary
 
-| Credential type | Storage | Lifetime |
-|---|---|---|
-| Password | bcrypt hash (cost 12) in `users.password_hash` | Permanent |
-| JWT access token | In-memory (frontend Zustand store) | 15 minutes |
-| Refresh token | SHA-256 hash in `refresh_tokens` table, httpOnly cookie | 7 days |
-| PAT | bcrypt hash in `personal_access_tokens` table | Optional expiry |
-| SSH key | `authorized_keys` file + DB record | Until deleted |
+| Credential type  | Storage                                                 | Lifetime        |
+| ---------------- | ------------------------------------------------------- | --------------- |
+| Password         | bcrypt hash (cost 12) in `users.password_hash`          | Permanent       |
+| JWT access token | In-memory (frontend Zustand store)                      | 15 minutes      |
+| Refresh token    | SHA-256 hash in `refresh_tokens` table, httpOnly cookie | 7 days          |
+| PAT              | bcrypt hash in `personal_access_tokens` table           | Optional expiry |
+| SSH key          | `authorized_keys` file + DB record                      | Until deleted   |
 
 **Security rules:**
+
 - Never log tokens, passwords, JWT payloads, or raw credentials.
 - Never expose `/internal/*` routes via Caddy.
 - Access tokens live in memory only — never `localStorage`.
@@ -121,31 +122,31 @@ git CLI (SSH)
 
 ### Public API (via Caddy `/api/*`)
 
-| Method | Path | Auth | Description |
-|---|---|---|---|
-| POST | /auth/register | none | Register user |
-| POST | /auth/login | none | Login → JWT + refresh cookie |
-| POST | /auth/refresh | cookie | Rotate access token |
-| POST | /auth/logout | JWT | Revoke refresh token |
-| GET | /auth/me | JWT | Current user info |
-| GET | /ssh-keys | JWT | List SSH keys |
-| POST | /ssh-keys | JWT | Add SSH public key |
-| DELETE | /ssh-keys/:id | JWT | Remove SSH key |
-| GET | /tokens | JWT | List PATs (metadata only) |
-| POST | /tokens | JWT | Generate new PAT |
-| DELETE | /tokens/:id | JWT | Revoke PAT |
-| GET | /repositories | JWT | List repositories |
-| POST | /repositories | JWT | Create repository |
-| GET | /repositories/:owner/:name | JWT | Get repo metadata |
-| DELETE | /repositories/:owner/:name | JWT | Delete repository |
+| Method | Path                       | Auth   | Description                  |
+| ------ | -------------------------- | ------ | ---------------------------- |
+| POST   | /auth/register             | none   | Register user                |
+| POST   | /auth/login                | none   | Login → JWT + refresh cookie |
+| POST   | /auth/refresh              | cookie | Rotate access token          |
+| POST   | /auth/logout               | JWT    | Revoke refresh token         |
+| GET    | /auth/me                   | JWT    | Current user info            |
+| GET    | /ssh-keys                  | JWT    | List SSH keys                |
+| POST   | /ssh-keys                  | JWT    | Add SSH public key           |
+| DELETE | /ssh-keys/:id              | JWT    | Remove SSH key               |
+| GET    | /tokens                    | JWT    | List PATs (metadata only)    |
+| POST   | /tokens                    | JWT    | Generate new PAT             |
+| DELETE | /tokens/:id                | JWT    | Revoke PAT                   |
+| GET    | /repositories              | JWT    | List repositories            |
+| POST   | /repositories              | JWT    | Create repository            |
+| GET    | /repositories/:owner/:name | JWT    | Get repo metadata            |
+| DELETE | /repositories/:owner/:name | JWT    | Delete repository            |
 
 ### Internal (Docker-network only, never via Caddy)
 
-| Method | Path | Description |
-|---|---|---|
-| GET | /internal/git-auth | Validate Basic Auth for git HTTP |
-| GET | /internal/health | Liveness probe |
-| GET | /internal/ready | Readiness probe |
+| Method | Path               | Description                      |
+| ------ | ------------------ | -------------------------------- |
+| GET    | /internal/git-auth | Validate Basic Auth for git HTTP |
+| GET    | /internal/health   | Liveness probe                   |
+| GET    | /internal/ready    | Readiness probe                  |
 
 ---
 
@@ -166,16 +167,16 @@ Sensitive records (users, repositories) use soft-delete (`deletedAt`). SSH keys 
 
 ## Frontend Routes
 
-| Path | Page | Auth Required |
-|---|---|---|
-| / | LandingPage | No |
-| /register | RegisterPage | No |
-| /login | LoginPage | No |
-| /dashboard | DashboardPage | Yes |
-| /settings/ssh-keys | SshKeysPage | Yes |
-| /settings/tokens | TokensPage | Yes |
-| /repositories/new | NewRepositoryPage | Yes |
-| /repositories/:name | RepositoryPage | Yes |
+| Path                | Page              | Auth Required |
+| ------------------- | ----------------- | ------------- |
+| /                   | LandingPage       | No            |
+| /register           | RegisterPage      | No            |
+| /login              | LoginPage         | No            |
+| /dashboard          | DashboardPage     | Yes           |
+| /settings/ssh-keys  | SshKeysPage       | Yes           |
+| /settings/tokens    | TokensPage        | Yes           |
+| /repositories/new   | NewRepositoryPage | Yes           |
+| /repositories/:name | RepositoryPage    | Yes           |
 
 ---
 
@@ -260,13 +261,13 @@ pnpm --filter @custom-git-server/frontend build
 
 ## Access Points (when compose is running)
 
-| Endpoint | URL |
-|---|---|
-| Web UI | `https://localhost` |
-| API | `https://localhost/api` |
-| API health | `https://localhost/api/internal/health` |
-| Git HTTPS | `https://localhost/<owner>/<repo>.git` |
-| Git SSH | `ssh://git@localhost:2222/<owner>/<repo>.git` |
+| Endpoint   | URL                                           |
+| ---------- | --------------------------------------------- |
+| Web UI     | `https://localhost`                           |
+| API        | `https://localhost/api`                       |
+| API health | `https://localhost/api/internal/health`       |
+| Git HTTPS  | `https://localhost/<owner>/<repo>.git`        |
+| Git SSH    | `ssh://git@localhost:2222/<owner>/<repo>.git` |
 
 > Caddy uses a self-signed certificate for `localhost`. Accept the browser warning or add it to your trust store (`caddy-root.crt`).
 
@@ -289,6 +290,7 @@ apps/backend/src/
 ```
 
 Key rules:
+
 - TypeBox (`@sinclair/typebox`) for all schema validation — no Zod on the backend.
 - `fastify.inject()` for integration tests — not supertest.
 - `request.log` for logging — never `console.log`.
@@ -313,6 +315,7 @@ apps/frontend/src/
 ```
 
 Key rules:
+
 - Zod for all form validation on the frontend (not TypeBox).
 - TanStack Query for all server state — no `useEffect` for data fetching.
 - Access token in Zustand memory only — never `localStorage`.
@@ -337,14 +340,14 @@ This project uses **shadcn/ui** as the preferred component library.
 
 See the `.agent/workflows/` directory for step-by-step workflows:
 
-| Workflow | File | Description |
-|---|---|---|
-| Implement a phase | `workflows/implement-phase.md` | How to pick up, implement, and close out a task phase |
-| Run tests | `workflows/run-tests.md` | How to run the full test suite and interpret results |
-| Dev environment setup | `workflows/dev-setup.md` | First-time setup and compose startup |
-| Add a new API endpoint | `workflows/add-api-endpoint.md` | Step-by-step pattern for backend routes |
-| Add a new frontend page | `workflows/add-frontend-page.md` | Step-by-step pattern for React pages |
-| Database migration | `workflows/db-migration.md` | Safe migration creation and application |
+| Workflow                | File                             | Description                                           |
+| ----------------------- | -------------------------------- | ----------------------------------------------------- |
+| Implement a phase       | `workflows/implement-phase.md`   | How to pick up, implement, and close out a task phase |
+| Run tests               | `workflows/run-tests.md`         | How to run the full test suite and interpret results  |
+| Dev environment setup   | `workflows/dev-setup.md`         | First-time setup and compose startup                  |
+| Add a new API endpoint  | `workflows/add-api-endpoint.md`  | Step-by-step pattern for backend routes               |
+| Add a new frontend page | `workflows/add-frontend-page.md` | Step-by-step pattern for React pages                  |
+| Database migration      | `workflows/db-migration.md`      | Safe migration creation and application               |
 
 ---
 

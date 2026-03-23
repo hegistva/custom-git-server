@@ -1,22 +1,22 @@
-import React from 'react'
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import { MemoryRouter, Route, Routes } from 'react-router-dom'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import React from 'react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import DashboardPage from '@/pages/DashboardPage'
+import DashboardPage from '@/pages/DashboardPage';
 
 // ─── Mocks ────────────────────────────────────────────────────────────────────
 
 vi.mock('@/api/auth', () => ({
   logout: vi.fn(),
-}))
+}));
 vi.mock('@/api/repositories', () => ({
   listRepositories: vi.fn(),
-}))
+}));
 
-const mockClearAuth = vi.fn()
+const mockClearAuth = vi.fn();
 vi.mock('@/store/auth', () => ({
   useAuthStore: vi.fn((selector) =>
     selector({
@@ -27,21 +27,23 @@ vi.mock('@/store/auth', () => ({
       clearAuth: mockClearAuth,
     }),
   ),
-}))
+}));
 
-import { logout } from '@/api/auth'
-import { listRepositories } from '@/api/repositories'
-const mockLogout = vi.mocked(logout)
-const mockListRepositories = vi.mocked(listRepositories)
+import { logout } from '@/api/auth';
+import { listRepositories } from '@/api/repositories';
+const mockLogout = vi.mocked(logout);
+const mockListRepositories = vi.mocked(listRepositories);
 
 // ─── Render helpers ───────────────────────────────────────────────────────────
 
 function makeQueryClient() {
-  return new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } })
+  return new QueryClient({
+    defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+  });
 }
 
 function renderDashboardPage() {
-  const queryClient = makeQueryClient()
+  const queryClient = makeQueryClient();
   return render(
     <QueryClientProvider client={queryClient}>
       <MemoryRouter initialEntries={['/dashboard']}>
@@ -51,73 +53,81 @@ function renderDashboardPage() {
         </Routes>
       </MemoryRouter>
     </QueryClientProvider>,
-  )
+  );
 }
 
 // ─── Tests ────────────────────────────────────────────────────────────────────
 
 describe('DashboardPage', () => {
-  const user = userEvent.setup()
+  const user = userEvent.setup();
 
   beforeEach(() => {
-    vi.clearAllMocks()
-    mockListRepositories.mockResolvedValue([])
-  })
+    vi.clearAllMocks();
+    mockListRepositories.mockResolvedValue([]);
+  });
 
   it('renders the dashboard with personalized welcome message', () => {
-    renderDashboardPage()
-    expect(screen.getByRole('heading', { name: /dashboard/i })).toBeInTheDocument()
-    expect(screen.getByText(/welcome, testuser!/i)).toBeInTheDocument()
-  })
+    renderDashboardPage();
+    expect(screen.getByRole('heading', { name: /dashboard/i })).toBeInTheDocument();
+    expect(screen.getByText(/welcome, testuser!/i)).toBeInTheDocument();
+  });
 
   it('renders a link to manage SSH keys', () => {
-    renderDashboardPage()
-    const link = screen.getByRole('link', { name: /manage ssh keys/i })
-    expect(link).toBeInTheDocument()
-    expect(link).toHaveAttribute('href', '/settings/ssh-keys')
-  })
+    renderDashboardPage();
+    const link = screen.getByRole('link', { name: /manage ssh keys/i });
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveAttribute('href', '/settings/ssh-keys');
+  });
 
   it('renders a link to manage personal access tokens', () => {
-    renderDashboardPage()
-    const link = screen.getByRole('link', { name: /manage personal access tokens/i })
-    expect(link).toBeInTheDocument()
-    expect(link).toHaveAttribute('href', '/settings/tokens')
-  })
+    renderDashboardPage();
+    const link = screen.getByRole('link', { name: /manage personal access tokens/i });
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveAttribute('href', '/settings/tokens');
+  });
 
   it('renders a log out button', () => {
-    renderDashboardPage()
-    expect(screen.getByRole('button', { name: /log out/i })).toBeInTheDocument()
-  })
+    renderDashboardPage();
+    expect(screen.getByRole('button', { name: /log out/i })).toBeInTheDocument();
+  });
 
   it('renders Your Repositories section', async () => {
-    mockListRepositories.mockResolvedValueOnce([{ id: '1', name: 'my-test-repo', description: 'desc', isPrivate: true, createdAt: new Date().toISOString() }])
-    renderDashboardPage()
-    expect(await screen.findByText('my-test-repo')).toBeInTheDocument()
-  })
+    mockListRepositories.mockResolvedValueOnce([
+      {
+        id: '1',
+        name: 'my-test-repo',
+        description: 'desc',
+        isPrivate: true,
+        createdAt: new Date().toISOString(),
+      },
+    ]);
+    renderDashboardPage();
+    expect(await screen.findByText('my-test-repo')).toBeInTheDocument();
+  });
 
   it('calls the logout API, clears auth state, and redirects when logged out', async () => {
-    mockLogout.mockResolvedValueOnce(undefined)
-    renderDashboardPage()
+    mockLogout.mockResolvedValueOnce(undefined);
+    renderDashboardPage();
 
-    await user.click(screen.getByRole('button', { name: /log out/i }))
+    await user.click(screen.getByRole('button', { name: /log out/i }));
 
     await waitFor(() => {
-      expect(mockLogout).toHaveBeenCalledOnce()
-    })
+      expect(mockLogout).toHaveBeenCalledOnce();
+    });
 
-    expect(mockClearAuth).toHaveBeenCalledOnce()
+    expect(mockClearAuth).toHaveBeenCalledOnce();
     // By checking if the LoginPage fallback route is rendered, we ensure the redirect took place.
-    expect(await screen.findByText('LoginPage')).toBeInTheDocument()
-  })
+    expect(await screen.findByText('LoginPage')).toBeInTheDocument();
+  });
 
   it('disables the log out button while the request is pending', async () => {
-    mockLogout.mockReturnValue(new Promise(() => {}))
-    renderDashboardPage()
+    mockLogout.mockReturnValue(new Promise(() => {}));
+    renderDashboardPage();
 
-    await user.click(screen.getByRole('button', { name: /log out/i }))
+    await user.click(screen.getByRole('button', { name: /log out/i }));
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /logging out/i })).toBeDisabled()
-    })
-  })
-})
+      expect(screen.getByRole('button', { name: /logging out/i })).toBeDisabled();
+    });
+  });
+});

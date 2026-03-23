@@ -30,6 +30,7 @@ Read only the files relevant to your current work:
 ## Step 4 — Read Files Before Editing
 
 Before modifying any source file:
+
 1. View the file with the view-file tool.
 2. Understand its current structure.
 3. Plan your changes without guessing.
@@ -85,6 +86,7 @@ Follow this sub-order for frontend tasks:
 ## Step 7 — Run All Tests
 
 // turbo
+
 ```bash
 pnpm test
 ```
@@ -94,6 +96,7 @@ All tests must pass before proceeding.
 ## Step 8 — Check Lint and Types
 
 // turbo
+
 ```bash
 pnpm lint && pnpm typecheck
 ```
@@ -105,6 +108,7 @@ Zero warnings, zero errors required.
 For each completed task in `docs/tasks-fullstack.md`, change `[ ]` to `[x]`.
 
 Only mark a task complete if:
+
 - Implementation exists
 - Relevant tests pass
 - Lint and typecheck pass

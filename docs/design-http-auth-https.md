@@ -75,8 +75,6 @@ Benefits:
 - No auth files or auth modules needed in `git-server`
 - Backend remains focused on Git CGI handling
 
-
-
 ## Operational Notes
 
 - Clients must resolve `git.local` to the host running Docker if not using `localhost`.

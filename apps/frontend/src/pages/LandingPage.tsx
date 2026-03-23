@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
 export default function LandingPage() {
   return (
@@ -9,5 +9,5 @@ export default function LandingPage() {
         <Link to="/login">Login</Link> | <Link to="/register">Register</Link>
       </nav>
     </main>
-  )
+  );
 }

@@ -79,14 +79,14 @@ Extend the existing SSH + HTTPS Git POC with a fullstack management layer:
 ### Port Summary
 
 | Service    | Container Port | Host Port | Purpose                        |
-|------------|---------------|-----------|-------------------------------|
-| caddy      | 80            | 80        | HTTP → HTTPS redirect          |
-| caddy      | 443           | 443       | TLS edge, routing              |
-| frontend   | 3000          | —         | React SPA (via Caddy)          |
-| backend    | 4000          | —         | API (via Caddy /api/*)         |
-| git-server | 22            | 2222      | SSH Git                        |
-| git-server | 80            | —         | Git Smart HTTP (internal only) |
-| postgres   | 5432          | —         | Database (internal only)       |
+| ---------- | -------------- | --------- | ------------------------------ |
+| caddy      | 80             | 80        | HTTP → HTTPS redirect          |
+| caddy      | 443            | 443       | TLS edge, routing              |
+| frontend   | 3000           | —         | React SPA (via Caddy)          |
+| backend    | 4000           | —         | API (via Caddy /api/\*)        |
+| git-server | 22             | 2222      | SSH Git                        |
+| git-server | 80             | —         | Git Smart HTTP (internal only) |
+| postgres   | 5432           | —         | Database (internal only)       |
 
 ---
 
@@ -170,60 +170,65 @@ Repository (N) ──── (N) RepositoryMembership ──── (N) User   [fu
 ### Tables
 
 #### `users`
-| Column         | Type        | Notes                        |
-|----------------|-------------|------------------------------|
-| id             | UUID PK     | `gen_random_uuid()`          |
-| username       | TEXT UNIQUE | lowercase, 3-39 chars, regex |
-| email          | TEXT UNIQUE | validated format             |
-| password_hash  | TEXT        | bcrypt, cost 12              |
-| created_at     | TIMESTAMPTZ | default now()                |
-| updated_at     | TIMESTAMPTZ | auto-updated                 |
+
+| Column        | Type        | Notes                        |
+| ------------- | ----------- | ---------------------------- |
+| id            | UUID PK     | `gen_random_uuid()`          |
+| username      | TEXT UNIQUE | lowercase, 3-39 chars, regex |
+| email         | TEXT UNIQUE | validated format             |
+| password_hash | TEXT        | bcrypt, cost 12              |
+| created_at    | TIMESTAMPTZ | default now()                |
+| updated_at    | TIMESTAMPTZ | auto-updated                 |
 
 #### `ssh_keys`
-| Column      | Type        | Notes                              |
-|-------------|-------------|------------------------------------|
-| id          | UUID PK     |                                    |
-| user_id     | UUID FK     | → users.id, cascade delete         |
-| label       | TEXT        | user-provided friendly name        |
-| public_key  | TEXT        | full public key string             |
-| fingerprint | TEXT UNIQUE | SHA-256 fingerprint, dedup guard   |
-| created_at  | TIMESTAMPTZ |                                    |
+
+| Column      | Type        | Notes                            |
+| ----------- | ----------- | -------------------------------- |
+| id          | UUID PK     |                                  |
+| user_id     | UUID FK     | → users.id, cascade delete       |
+| label       | TEXT        | user-provided friendly name      |
+| public_key  | TEXT        | full public key string           |
+| fingerprint | TEXT UNIQUE | SHA-256 fingerprint, dedup guard |
+| created_at  | TIMESTAMPTZ |                                  |
 
 #### `personal_access_tokens`
-| Column       | Type        | Notes                              |
-|--------------|-------------|------------------------------------|
-| id           | UUID PK     |                                    |
-| user_id      | UUID FK     | → users.id, cascade delete         |
-| label        | TEXT        | user-provided friendly name        |
-| token_hash   | TEXT        | bcrypt hash of the raw token       |
-| token_prefix | TEXT        | first 8 chars for display/lookup   |
-| expires_at   | TIMESTAMPTZ | nullable, null = no expiry         |
-| last_used_at | TIMESTAMPTZ | updated on each git auth check     |
-| revoked_at   | TIMESTAMPTZ | nullable, null = active            |
-| created_at   | TIMESTAMPTZ |                                    |
+
+| Column       | Type        | Notes                            |
+| ------------ | ----------- | -------------------------------- |
+| id           | UUID PK     |                                  |
+| user_id      | UUID FK     | → users.id, cascade delete       |
+| label        | TEXT        | user-provided friendly name      |
+| token_hash   | TEXT        | bcrypt hash of the raw token     |
+| token_prefix | TEXT        | first 8 chars for display/lookup |
+| expires_at   | TIMESTAMPTZ | nullable, null = no expiry       |
+| last_used_at | TIMESTAMPTZ | updated on each git auth check   |
+| revoked_at   | TIMESTAMPTZ | nullable, null = active          |
+| created_at   | TIMESTAMPTZ |                                  |
 
 #### `repositories`
-| Column       | Type        | Notes                                     |
-|--------------|-------------|-------------------------------------------|
-| id           | UUID PK     |                                           |
-| owner_id     | UUID FK     | → users.id, cascade delete                |
-| name         | TEXT        | slug, unique per owner                    |
-| description  | TEXT        | nullable                                  |
-| is_private   | BOOLEAN     | default true                              |
-| disk_path    | TEXT        | absolute path on container fs             |
-| created_at   | TIMESTAMPTZ |                                           |
-| updated_at   | TIMESTAMPTZ |                                           |
-| UNIQUE(owner_id, name) |    |                                           |
+
+| Column                 | Type        | Notes                         |
+| ---------------------- | ----------- | ----------------------------- |
+| id                     | UUID PK     |                               |
+| owner_id               | UUID FK     | → users.id, cascade delete    |
+| name                   | TEXT        | slug, unique per owner        |
+| description            | TEXT        | nullable                      |
+| is_private             | BOOLEAN     | default true                  |
+| disk_path              | TEXT        | absolute path on container fs |
+| created_at             | TIMESTAMPTZ |                               |
+| updated_at             | TIMESTAMPTZ |                               |
+| UNIQUE(owner_id, name) |             |                               |
 
 #### `refresh_tokens`
-| Column      | Type        | Notes                              |
-|-------------|-------------|------------------------------------|
-| id          | UUID PK     |                                    |
-| user_id     | UUID FK     | → users.id, cascade delete         |
-| token_hash  | TEXT UNIQUE | SHA-256 hash of the raw token      |
-| expires_at  | TIMESTAMPTZ |                                    |
-| revoked_at  | TIMESTAMPTZ | nullable                           |
-| created_at  | TIMESTAMPTZ |                                    |
+
+| Column     | Type        | Notes                         |
+| ---------- | ----------- | ----------------------------- |
+| id         | UUID PK     |                               |
+| user_id    | UUID FK     | → users.id, cascade delete    |
+| token_hash | TEXT UNIQUE | SHA-256 hash of the raw token |
+| expires_at | TIMESTAMPTZ |                               |
+| revoked_at | TIMESTAMPTZ | nullable                      |
+| created_at | TIMESTAMPTZ |                               |
 
 ---
 
@@ -233,61 +238,61 @@ All routes are prefixed `/api`. Internal routes are only reachable within the Do
 
 ### Auth
 
-| Method | Path                  | Auth       | Description                        |
-|--------|-----------------------|------------|------------------------------------|
-| POST   | /auth/register        | none       | Register new user                  |
-| POST   | /auth/login           | none       | Login, returns JWT + sets cookie   |
-| POST   | /auth/refresh         | cookie     | Rotate access token                |
-| POST   | /auth/logout          | JWT        | Revoke refresh token               |
-| GET    | /auth/me              | JWT        | Current user profile               |
+| Method | Path           | Auth   | Description                      |
+| ------ | -------------- | ------ | -------------------------------- |
+| POST   | /auth/register | none   | Register new user                |
+| POST   | /auth/login    | none   | Login, returns JWT + sets cookie |
+| POST   | /auth/refresh  | cookie | Rotate access token              |
+| POST   | /auth/logout   | JWT    | Revoke refresh token             |
+| GET    | /auth/me       | JWT    | Current user profile             |
 
 ### SSH Keys
 
-| Method | Path                  | Auth | Description                        |
-|--------|-----------------------|------|------------------------------------|
-| GET    | /ssh-keys             | JWT  | List user's SSH keys               |
-| POST   | /ssh-keys             | JWT  | Add new SSH public key             |
-| DELETE | /ssh-keys/:id         | JWT  | Remove SSH key                     |
+| Method | Path          | Auth | Description            |
+| ------ | ------------- | ---- | ---------------------- |
+| GET    | /ssh-keys     | JWT  | List user's SSH keys   |
+| POST   | /ssh-keys     | JWT  | Add new SSH public key |
+| DELETE | /ssh-keys/:id | JWT  | Remove SSH key         |
 
 ### Personal Access Tokens
 
-| Method | Path                  | Auth | Description                        |
-|--------|-----------------------|------|------------------------------------|
-| GET    | /tokens               | JWT  | List tokens (metadata only)        |
-| POST   | /tokens               | JWT  | Generate new PAT (returns raw once)|
-| DELETE | /tokens/:id           | JWT  | Revoke token                       |
+| Method | Path        | Auth | Description                         |
+| ------ | ----------- | ---- | ----------------------------------- |
+| GET    | /tokens     | JWT  | List tokens (metadata only)         |
+| POST   | /tokens     | JWT  | Generate new PAT (returns raw once) |
+| DELETE | /tokens/:id | JWT  | Revoke token                        |
 
 ### Repositories
 
-| Method | Path                       | Auth | Description                    |
-|--------|----------------------------|------|--------------------------------|
-| GET    | /repositories              | JWT  | List user's repositories       |
-| POST   | /repositories              | JWT  | Create new bare repo           |
-| GET    | /repositories/:owner/:name | JWT  | Get repository metadata        |
-| DELETE | /repositories/:owner/:name | JWT  | Delete repository              |
+| Method | Path                       | Auth | Description              |
+| ------ | -------------------------- | ---- | ------------------------ |
+| GET    | /repositories              | JWT  | List user's repositories |
+| POST   | /repositories              | JWT  | Create new bare repo     |
+| GET    | /repositories/:owner/:name | JWT  | Get repository metadata  |
+| DELETE | /repositories/:owner/:name | JWT  | Delete repository        |
 
 ### Internal (Docker-network only, not exposed via Caddy)
 
-| Method | Path                  | Auth             | Description                     |
-|--------|-----------------------|------------------|---------------------------------|
-| GET    | /internal/git-auth    | Basic (username:PAT) | Validate git HTTP credentials |
-| GET    | /internal/health      | none             | Liveness probe                  |
-| GET    | /internal/ready       | none             | Readiness probe                 |
+| Method | Path               | Auth                 | Description                   |
+| ------ | ------------------ | -------------------- | ----------------------------- |
+| GET    | /internal/git-auth | Basic (username:PAT) | Validate git HTTP credentials |
+| GET    | /internal/health   | none                 | Liveness probe                |
+| GET    | /internal/ready    | none                 | Readiness probe               |
 
 ---
 
 ## Frontend Routes
 
-| Path                  | Component            | Auth Required | Description                    |
-|-----------------------|----------------------|--------------|--------------------------------|
-| /                     | LandingPage          | no           | Marketing / redirect to login  |
-| /register             | RegisterPage         | no           | User registration form         |
-| /login                | LoginPage            | no           | Login form                     |
-| /dashboard            | DashboardPage        | yes          | Repo list + quick actions      |
-| /settings/ssh-keys    | SshKeysPage          | yes          | List / add / delete SSH keys   |
-| /settings/tokens      | TokensPage           | yes          | List / generate / revoke PATs  |
-| /repositories/new     | NewRepositoryPage    | yes          | Create repository form         |
-| /repositories/:name   | RepositoryPage       | yes          | Repo detail + clone instructions|
+| Path                | Component         | Auth Required | Description                      |
+| ------------------- | ----------------- | ------------- | -------------------------------- |
+| /                   | LandingPage       | no            | Marketing / redirect to login    |
+| /register           | RegisterPage      | no            | User registration form           |
+| /login              | LoginPage         | no            | Login form                       |
+| /dashboard          | DashboardPage     | yes           | Repo list + quick actions        |
+| /settings/ssh-keys  | SshKeysPage       | yes           | List / add / delete SSH keys     |
+| /settings/tokens    | TokensPage        | yes           | List / generate / revoke PATs    |
+| /repositories/new   | NewRepositoryPage | yes           | Create repository form           |
+| /repositories/:name | RepositoryPage    | yes           | Repo detail + clone instructions |
 
 ---
 

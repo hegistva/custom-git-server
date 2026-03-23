@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
 export const createRepositorySchema = z.object({
   name: z
@@ -8,6 +8,6 @@ export const createRepositorySchema = z.object({
     .regex(/^[a-zA-Z0-9.\-_]+$/, 'Invalid name format'),
   description: z.string().optional().nullable(),
   isPrivate: z.boolean(),
-})
+});
 
-export type CreateRepositoryFormValues = z.infer<typeof createRepositorySchema>
+export type CreateRepositoryFormValues = z.infer<typeof createRepositorySchema>;

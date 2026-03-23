@@ -27,7 +27,11 @@ afterAll(async () => {
 describe('GET /api/tokens', () => {
   it('returns empty list for no tokens', async () => {
     const { username, rawPassword } = await createTestUser();
-    const loginRes = await app.inject({ method: 'POST', url: '/api/auth/login', payload: { username, password: rawPassword } });
+    const loginRes = await app.inject({
+      method: 'POST',
+      url: '/api/auth/login',
+      payload: { username, password: rawPassword },
+    });
     const token = loginRes.json().accessToken;
 
     const res = await app.inject({
@@ -42,7 +46,11 @@ describe('GET /api/tokens', () => {
 
   it('returns populated list', async () => {
     const { username, rawPassword } = await createTestUser();
-    const loginRes = await app.inject({ method: 'POST', url: '/api/auth/login', payload: { username, password: rawPassword } });
+    const loginRes = await app.inject({
+      method: 'POST',
+      url: '/api/auth/login',
+      payload: { username, password: rawPassword },
+    });
     const token = loginRes.json().accessToken;
 
     await app.inject({
@@ -67,7 +75,11 @@ describe('GET /api/tokens', () => {
 describe('POST /api/tokens', () => {
   it('returns 201 with raw token', async () => {
     const { username, rawPassword } = await createTestUser();
-    const loginRes = await app.inject({ method: 'POST', url: '/api/auth/login', payload: { username, password: rawPassword } });
+    const loginRes = await app.inject({
+      method: 'POST',
+      url: '/api/auth/login',
+      payload: { username, password: rawPassword },
+    });
     const token = loginRes.json().accessToken;
 
     const res = await app.inject({
@@ -83,7 +95,11 @@ describe('POST /api/tokens', () => {
 
   it('requires label', async () => {
     const { username, rawPassword } = await createTestUser();
-    const loginRes = await app.inject({ method: 'POST', url: '/api/auth/login', payload: { username, password: rawPassword } });
+    const loginRes = await app.inject({
+      method: 'POST',
+      url: '/api/auth/login',
+      payload: { username, password: rawPassword },
+    });
     const token = loginRes.json().accessToken;
 
     const res = await app.inject({
@@ -99,7 +115,11 @@ describe('POST /api/tokens', () => {
 describe('DELETE /api/tokens/:id', () => {
   it('deletes token successfully (sets revokedAt)', async () => {
     const { username, rawPassword } = await createTestUser();
-    const loginRes = await app.inject({ method: 'POST', url: '/api/auth/login', payload: { username, password: rawPassword } });
+    const loginRes = await app.inject({
+      method: 'POST',
+      url: '/api/auth/login',
+      payload: { username, password: rawPassword },
+    });
     const auth = loginRes.json().accessToken;
 
     const addRes = await app.inject({
@@ -127,7 +147,11 @@ describe('DELETE /api/tokens/:id', () => {
 
   it('returns 404 for not found', async () => {
     const { username, rawPassword } = await createTestUser();
-    const loginRes = await app.inject({ method: 'POST', url: '/api/auth/login', payload: { username, password: rawPassword } });
+    const loginRes = await app.inject({
+      method: 'POST',
+      url: '/api/auth/login',
+      payload: { username, password: rawPassword },
+    });
     const auth = loginRes.json().accessToken;
 
     const res = await app.inject({
@@ -140,8 +164,12 @@ describe('DELETE /api/tokens/:id', () => {
 
   it('returns 404 for wrong owner', async () => {
     const u1 = await createTestUser();
-    const l1 = await app.inject({ method: 'POST', url: '/api/auth/login', payload: { username: u1.username, password: u1.rawPassword } });
-    
+    const l1 = await app.inject({
+      method: 'POST',
+      url: '/api/auth/login',
+      payload: { username: u1.username, password: u1.rawPassword },
+    });
+
     const addRes = await app.inject({
       method: 'POST',
       url: '/api/tokens',
@@ -149,10 +177,14 @@ describe('DELETE /api/tokens/:id', () => {
       payload: { label: 'T1' },
     });
     const tId = addRes.json().token.id;
-    
+
     const u2 = await createTestUser();
-    const l2 = await app.inject({ method: 'POST', url: '/api/auth/login', payload: { username: u2.username, password: u2.rawPassword } });
-    
+    const l2 = await app.inject({
+      method: 'POST',
+      url: '/api/auth/login',
+      payload: { username: u2.username, password: u2.rawPassword },
+    });
+
     const res = await app.inject({
       method: 'DELETE',
       url: `/api/tokens/${tId}`,

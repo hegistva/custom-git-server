@@ -1,5 +1,5 @@
 ---
-applyTo: "apps/frontend/**"
+applyTo: 'apps/frontend/**'
 ---
 
 # Frontend Development Instructions
@@ -129,6 +129,7 @@ src/store/auth.ts
 All Vite env vars must start with `VITE_`. Document in `../../.env.example`.
 
 Required:
+
 ```
 VITE_API_BASE_URL    # e.g. https://localhost/api
 ```
@@ -151,13 +152,13 @@ File location: `tests/unit/<feature>/`
 
 #### Every form component must have:
 
-| Test                        | Required                                                      |
-|-----------------------------|---------------------------------------------------------------|
-| Renders all fields          | All expected inputs are in the document                       |
-| Validation — missing fields | Submit with empty form triggers field-level error messages    |
-| Validation — invalid format | Wrong-format inputs show the Zod error message               |
-| Happy path submit           | Valid form calls the mocked mutation function                 |
-| Loading state               | Submit button is disabled while mutation is pending           |
+| Test                        | Required                                                   |
+| --------------------------- | ---------------------------------------------------------- |
+| Renders all fields          | All expected inputs are in the document                    |
+| Validation — missing fields | Submit with empty form triggers field-level error messages |
+| Validation — invalid format | Wrong-format inputs show the Zod error message             |
+| Happy path submit           | Valid form calls the mocked mutation function              |
+| Loading state               | Submit button is disabled while mutation is pending        |
 
 #### Custom hooks must have:
 
@@ -170,16 +171,16 @@ File location: `tests/e2e/`
 
 #### Required E2E scenarios (minimum):
 
-| Scenario                     | File                          |
-|------------------------------|-------------------------------|
-| Register new user            | `auth.spec.ts`                |
-| Login with valid credentials | `auth.spec.ts`                |
-| Login failure (wrong pass)   | `auth.spec.ts`                |
-| Add SSH key                  | `ssh-keys.spec.ts`            |
-| Generate and copy PAT        | `tokens.spec.ts`              |
-| Create repository            | `repositories.spec.ts`        |
-| View repository clone URLs   | `repositories.spec.ts`        |
-| Logged-out user redirected   | `auth.spec.ts`                |
+| Scenario                     | File                   |
+| ---------------------------- | ---------------------- |
+| Register new user            | `auth.spec.ts`         |
+| Login with valid credentials | `auth.spec.ts`         |
+| Login failure (wrong pass)   | `auth.spec.ts`         |
+| Add SSH key                  | `ssh-keys.spec.ts`     |
+| Generate and copy PAT        | `tokens.spec.ts`       |
+| Create repository            | `repositories.spec.ts` |
+| View repository clone URLs   | `repositories.spec.ts` |
+| Logged-out user redirected   | `auth.spec.ts`         |
 
 #### Playwright Conventions
 

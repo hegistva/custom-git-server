@@ -37,15 +37,8 @@ export function AddSshKeyForm() {
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <div>
           <label htmlFor="label">Title / Label</label>
-          <input
-            id="label"
-            type="text"
-            placeholder="e.g. Work Laptop"
-            {...register('label')}
-          />
-          {formState.errors.label && (
-            <p role="alert">{formState.errors.label.message}</p>
-          )}
+          <input id="label" type="text" placeholder="e.g. Work Laptop" {...register('label')} />
+          {formState.errors.label && <p role="alert">{formState.errors.label.message}</p>}
         </div>
 
         <div>
@@ -56,14 +49,10 @@ export function AddSshKeyForm() {
             rows={4}
             {...register('publicKey')}
           />
-          {formState.errors.publicKey && (
-            <p role="alert">{formState.errors.publicKey.message}</p>
-          )}
+          {formState.errors.publicKey && <p role="alert">{formState.errors.publicKey.message}</p>}
         </div>
 
-        {formState.errors.root && (
-          <p role="alert">{formState.errors.root.message}</p>
-        )}
+        {formState.errors.root && <p role="alert">{formState.errors.root.message}</p>}
 
         <button type="submit" disabled={mutation.isPending}>
           {mutation.isPending ? 'Adding...' : 'Add Key'}

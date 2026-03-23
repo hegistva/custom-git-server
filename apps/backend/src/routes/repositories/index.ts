@@ -101,14 +101,18 @@ const repositoriesRoutes: FastifyPluginAsyncTypebox = async (app) => {
     },
     async (request) => {
       try {
-        const repo = await getRepository(request.params.owner, request.params.name, request.user!.sub);
+        const repo = await getRepository(
+          request.params.owner,
+          request.params.name,
+          request.user!.sub,
+        );
         return {
           ...repo,
           createdAt: repo.createdAt.toISOString(),
           owner: {
             id: repo.owner.id,
             username: repo.owner.username,
-          }
+          },
         };
       } catch (error) {
         if (error instanceof RepositoryNotFoundError) {

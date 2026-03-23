@@ -3,7 +3,6 @@ import * as crypto from 'crypto';
 import { env } from '../lib/env';
 import { db } from '../lib/db';
 
-
 // ─── Domain errors ────────────────────────────────────────────────────────────
 
 export class InvalidCredentialsError extends Error {
@@ -98,10 +97,7 @@ export async function registerUser(input: RegisterInput): Promise<AuthUser> {
  * Attempt login with username/password.
  * Returns AuthUser on success; throws InvalidCredentialsError otherwise.
  */
-export async function loginUser(
-  username: string,
-  password: string,
-): Promise<AuthUser> {
+export async function loginUser(username: string, password: string): Promise<AuthUser> {
   const user = await db.user.findFirst({
     where: { username: username.toLowerCase(), deletedAt: null },
     select: { id: true, username: true, email: true, passwordHash: true },

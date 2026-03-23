@@ -1,5 +1,5 @@
 ---
-applyTo: "apps/backend/**"
+applyTo: 'apps/backend/**'
 ---
 
 # Backend Development Instructions
@@ -93,6 +93,7 @@ apps/backend/
 All config comes from environment variables loaded via `dotenv` at startup. Required variables must be validated at application startup (fail-fast). Document every variable in `../../.env.example`.
 
 Required minimum:
+
 ```
 DATABASE_URL
 JWT_SECRET
@@ -136,14 +137,14 @@ tests/
 
 Each endpoint must have at minimum:
 
-| Test Type         | Required Cases                                              |
-|-------------------|-------------------------------------------------------------|
-| Happy path        | Valid input returns expected status + response shape        |
-| Auth failure      | Missing / invalid JWT returns 401                          |
-| Validation error  | Missing required field returns 400 with error detail        |
-| Not found         | Non-existent resource returns 404                          |
-| Ownership check   | Accessing another user's resource returns 403 or 404        |
-| Conflict (if applicable) | Duplicate entry returns 409                       |
+| Test Type                | Required Cases                                       |
+| ------------------------ | ---------------------------------------------------- |
+| Happy path               | Valid input returns expected status + response shape |
+| Auth failure             | Missing / invalid JWT returns 401                    |
+| Validation error         | Missing required field returns 400 with error detail |
+| Not found                | Non-existent resource returns 404                    |
+| Ownership check          | Accessing another user's resource returns 403 or 404 |
+| Conflict (if applicable) | Duplicate entry returns 409                          |
 
 ### Test Hygiene
 

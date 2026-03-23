@@ -1,5 +1,5 @@
 ---
-applyTo: "apps/backend/prisma/**"
+applyTo: 'apps/backend/prisma/**'
 ---
 
 # Database Development Instructions
@@ -67,6 +67,7 @@ pnpm prisma migrate dev --name <descriptive-name>
 ```
 
 Migration names must be **descriptive and present-tense**:
+
 - ✅ `add-refresh-tokens-table`
 - ✅ `add-fingerprint-index-to-ssh-keys`
 - ❌ `update`, `fix`, `changes`, `migration1`
@@ -167,13 +168,13 @@ await db.$transaction([
 
 ### What to Test
 
-| Scenario                         | Required                                       |
-|----------------------------------|------------------------------------------------|
-| Unique constraint violation      | Returns `PrismaClientKnownRequestError` P2002  |
-| FK cascade delete                | Child records removed when parent deleted      |
-| Soft delete filter               | Soft-deleted records excluded from default query|
-| Nullable field handling          | Null and non-null variants both persist correctly|
-| Composite unique constraint      | Duplicate `(owner_id, name)` rejected           |
+| Scenario                    | Required                                          |
+| --------------------------- | ------------------------------------------------- |
+| Unique constraint violation | Returns `PrismaClientKnownRequestError` P2002     |
+| FK cascade delete           | Child records removed when parent deleted         |
+| Soft delete filter          | Soft-deleted records excluded from default query  |
+| Nullable field handling     | Null and non-null variants both persist correctly |
+| Composite unique constraint | Duplicate `(owner_id, name)` rejected             |
 
 ### Factories
 

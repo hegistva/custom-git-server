@@ -32,10 +32,12 @@ export async function verifyGitAuth(username: string, token: string, originalUri
 
   // Update last used at in background
   if (usedTokenId) {
-    db.personalAccessToken.update({
-      where: { id: usedTokenId },
-      data: { lastUsedAt: new Date() },
-    }).catch(() => {});
+    db.personalAccessToken
+      .update({
+        where: { id: usedTokenId },
+        data: { lastUsedAt: new Date() },
+      })
+      .catch(() => {});
   }
 
   // MVP: Extract repository name from URI `/<owner>/<repo>.git/...`
@@ -47,7 +49,9 @@ export async function verifyGitAuth(username: string, token: string, originalUri
     if (!repoNameWithGit) {
       return false; // Invalid URI
     }
-    const repoName = repoNameWithGit.endsWith('.git') ? repoNameWithGit.slice(0, -4) : repoNameWithGit;
+    const repoName = repoNameWithGit.endsWith('.git')
+      ? repoNameWithGit.slice(0, -4)
+      : repoNameWithGit;
 
     // MVP: Must match owner username
     if (owner !== username) {

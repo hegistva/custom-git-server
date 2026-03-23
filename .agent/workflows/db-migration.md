@@ -15,6 +15,7 @@ Read `.github/instructions/database.instructions.md` before making any schema ch
 Edit `apps/backend/prisma/schema.prisma`.
 
 Rules:
+
 - Table names: `snake_case plural` (mapped with `@@map`)
 - Column names: `snake_case` (mapped with `@map`)
 - Prisma model names: `PascalCase singular`
@@ -33,6 +34,7 @@ pnpm --filter @custom-git-server/backend db:migrate:dev -- --name <descriptive-n
 ```
 
 Migration name rules:
+
 - ✅ `add-refresh-tokens-table`
 - ✅ `add-fingerprint-index-to-ssh-keys`
 - ❌ `update`, `fix`, `changes`, `migration1`
@@ -42,6 +44,7 @@ Migration name rules:
 Open the newly created file in `apps/backend/prisma/migrations/<timestamp>_<name>/migration.sql`.
 
 Check for:
+
 - **Destructive operations**: DROP COLUMN, DROP TABLE — flag these explicitly
 - **Lock risk**: Adding NOT NULL columns without a default on large tables
 - **Backward compatibility**: Can the old app version still run against the new schema?
@@ -59,10 +62,12 @@ This is run automatically by `postinstall`, but run it manually after schema cha
 If the schema change requires seed data updates, edit `apps/backend/prisma/seed.ts`.
 
 Rules:
+
 - Seed must be idempotent (use `upsert`, not `create`)
 - Seed must not run in production (guard at top: `if (process.env.NODE_ENV === 'production') throw`)
 
 Test the seed:
+
 ```bash
 docker compose exec backend pnpm db:seed
 ```

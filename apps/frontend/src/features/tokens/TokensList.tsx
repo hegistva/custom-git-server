@@ -6,7 +6,11 @@ import type { Token } from '../../types/tokens';
 export function TokensList() {
   const queryClient = useQueryClient();
 
-  const { data: tokens, isLoading, isError } = useQuery({
+  const {
+    data: tokens,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: queryKeys.tokens.list,
     queryFn: tokensApi.list,
   });
@@ -27,13 +31,18 @@ export function TokensList() {
       <h2>Your Personal Access Tokens</h2>
       <ul>
         {tokens.map((token: Token) => (
-          <li key={token.id} style={{ marginBottom: '1rem', border: '1px solid #ccc', padding: '1rem' }}>
+          <li
+            key={token.id}
+            style={{ marginBottom: '1rem', border: '1px solid #ccc', padding: '1rem' }}
+          >
             <div>
               <strong>{token.label}</strong>
               <p>Prefix: {token.tokenPrefix}</p>
               <p>Created: {new Date(token.createdAt).toLocaleString()}</p>
               {token.revokedAt ? (
-                <p style={{ color: 'red' }}>Revoked: {new Date(token.revokedAt).toLocaleString()}</p>
+                <p style={{ color: 'red' }}>
+                  Revoked: {new Date(token.revokedAt).toLocaleString()}
+                </p>
               ) : (
                 <p style={{ color: 'green' }}>Active</p>
               )}

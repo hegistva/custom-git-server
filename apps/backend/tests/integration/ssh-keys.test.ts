@@ -39,12 +39,17 @@ afterAll(async () => {
   await app.close();
 });
 
-const validKey = 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGo2v2d+lH2mR1mG5F/H5z6N8F4b5W5C9+0T0g/O+H/T test@example.com';
+const validKey =
+  'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGo2v2d+lH2mR1mG5F/H5z6N8F4b5W5C9+0T0g/O+H/T test@example.com';
 
 describe('GET /api/ssh-keys', () => {
   it('returns an empty list when user has no keys', async () => {
     const { username, rawPassword } = await createTestUser();
-    const loginRes = await app.inject({ method: 'POST', url: '/api/auth/login', payload: { username, password: rawPassword } });
+    const loginRes = await app.inject({
+      method: 'POST',
+      url: '/api/auth/login',
+      payload: { username, password: rawPassword },
+    });
     const { accessToken } = loginRes.json();
 
     const res = await app.inject({
@@ -59,7 +64,11 @@ describe('GET /api/ssh-keys', () => {
 
   it('returns populated list when user has keys', async () => {
     const { username, rawPassword } = await createTestUser();
-    const loginRes = await app.inject({ method: 'POST', url: '/api/auth/login', payload: { username, password: rawPassword } });
+    const loginRes = await app.inject({
+      method: 'POST',
+      url: '/api/auth/login',
+      payload: { username, password: rawPassword },
+    });
     const { accessToken } = loginRes.json();
 
     await app.inject({
@@ -86,7 +95,11 @@ describe('GET /api/ssh-keys', () => {
 describe('POST /api/ssh-keys', () => {
   it('adds a key successfully', async () => {
     const { username, rawPassword } = await createTestUser();
-    const loginRes = await app.inject({ method: 'POST', url: '/api/auth/login', payload: { username, password: rawPassword } });
+    const loginRes = await app.inject({
+      method: 'POST',
+      url: '/api/auth/login',
+      payload: { username, password: rawPassword },
+    });
     const { accessToken } = loginRes.json();
 
     const res = await app.inject({
@@ -104,7 +117,11 @@ describe('POST /api/ssh-keys', () => {
 
   it('returns 400 for invalid key format', async () => {
     const { username, rawPassword } = await createTestUser();
-    const loginRes = await app.inject({ method: 'POST', url: '/api/auth/login', payload: { username, password: rawPassword } });
+    const loginRes = await app.inject({
+      method: 'POST',
+      url: '/api/auth/login',
+      payload: { username, password: rawPassword },
+    });
     const { accessToken } = loginRes.json();
 
     const res = await app.inject({
@@ -119,7 +136,11 @@ describe('POST /api/ssh-keys', () => {
 
   it('returns 409 for duplicate fingerprint', async () => {
     const { username, rawPassword } = await createTestUser();
-    const loginRes = await app.inject({ method: 'POST', url: '/api/auth/login', payload: { username, password: rawPassword } });
+    const loginRes = await app.inject({
+      method: 'POST',
+      url: '/api/auth/login',
+      payload: { username, password: rawPassword },
+    });
     const { accessToken } = loginRes.json();
 
     await app.inject({
@@ -143,7 +164,11 @@ describe('POST /api/ssh-keys', () => {
 describe('DELETE /api/ssh-keys/:id', () => {
   it('deletes a key successfully and removes from file', async () => {
     const { username, rawPassword } = await createTestUser();
-    const loginRes = await app.inject({ method: 'POST', url: '/api/auth/login', payload: { username, password: rawPassword } });
+    const loginRes = await app.inject({
+      method: 'POST',
+      url: '/api/auth/login',
+      payload: { username, password: rawPassword },
+    });
     const { accessToken } = loginRes.json();
 
     const addRes = await app.inject({
@@ -170,7 +195,11 @@ describe('DELETE /api/ssh-keys/:id', () => {
 
   it('returns 404 if key not found', async () => {
     const { username, rawPassword } = await createTestUser();
-    const loginRes = await app.inject({ method: 'POST', url: '/api/auth/login', payload: { username, password: rawPassword } });
+    const loginRes = await app.inject({
+      method: 'POST',
+      url: '/api/auth/login',
+      payload: { username, password: rawPassword },
+    });
     const { accessToken } = loginRes.json();
 
     const res = await app.inject({
@@ -184,7 +213,11 @@ describe('DELETE /api/ssh-keys/:id', () => {
 
   it('returns 404 for wrong owner', async () => {
     const user1 = await createTestUser();
-    const loginRes1 = await app.inject({ method: 'POST', url: '/api/auth/login', payload: { username: user1.username, password: user1.rawPassword } });
+    const loginRes1 = await app.inject({
+      method: 'POST',
+      url: '/api/auth/login',
+      payload: { username: user1.username, password: user1.rawPassword },
+    });
     const token1 = loginRes1.json().accessToken;
 
     const addRes = await app.inject({
@@ -196,7 +229,11 @@ describe('DELETE /api/ssh-keys/:id', () => {
     const keyId = addRes.json().id;
 
     const user2 = await createTestUser();
-    const loginRes2 = await app.inject({ method: 'POST', url: '/api/auth/login', payload: { username: user2.username, password: user2.rawPassword } });
+    const loginRes2 = await app.inject({
+      method: 'POST',
+      url: '/api/auth/login',
+      payload: { username: user2.username, password: user2.rawPassword },
+    });
     const token2 = loginRes2.json().accessToken;
 
     const res = await app.inject({

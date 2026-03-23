@@ -52,7 +52,10 @@ describe('POST /api/auth/register', () => {
       payload: { username: 'newuser', email: 'new@example.com', password: 'SecurePass1!' },
     });
     expect(res.statusCode).toBe(201);
-    const body = res.json<{ accessToken: string; user: { id: string; username: string; email: string } }>();
+    const body = res.json<{
+      accessToken: string;
+      user: { id: string; username: string; email: string };
+    }>();
     expect(body.accessToken).toBeTruthy();
     expect(body.user.username).toBe('newuser');
     expect(body.user.email).toBe('new@example.com');
@@ -275,14 +278,22 @@ describe('POST /api/auth/refresh', () => {
 // ─────────────────────────────────────────────────────────────────────────────
 
 describe('POST /api/auth/logout', () => {
-  async function loginFull(username: string, password: string): Promise<{ accessToken: string; cookieHeader: string }> {
+  async function loginFull(
+    username: string,
+    password: string,
+  ): Promise<{ accessToken: string; cookieHeader: string }> {
     const res = await app.inject({
-      method: 'POST', url: '/api/auth/login', payload: { username, password },
+      method: 'POST',
+      url: '/api/auth/login',
+      payload: { username, password },
     });
     if (res.statusCode !== 200) throw new Error(`Login failed: ${res.statusCode} ${res.body}`);
     const body = res.json<{ accessToken: string }>();
     const tokenValue = extractCookie(res.headers['set-cookie'], 'refresh_token') ?? '';
-    return { accessToken: body.accessToken, cookieHeader: makeCookieHeader('refresh_token', tokenValue) };
+    return {
+      accessToken: body.accessToken,
+      cookieHeader: makeCookieHeader('refresh_token', tokenValue),
+    };
   }
 
   it('returns 204 and clears refresh_token cookie on logout', async () => {
@@ -334,7 +345,9 @@ describe('GET /api/auth/me', () => {
   it('returns 200 with current user info when authenticated', async () => {
     const { username, rawPassword, email } = await createTestUser();
     const loginRes = await app.inject({
-      method: 'POST', url: '/api/auth/login', payload: { username, password: rawPassword },
+      method: 'POST',
+      url: '/api/auth/login',
+      payload: { username, password: rawPassword },
     });
     expect(loginRes.statusCode).toBe(200);
     const { accessToken } = loginRes.json<{ accessToken: string }>();

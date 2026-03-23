@@ -9,6 +9,7 @@ Follow this pattern to add any new route to the Fastify backend.
 ## Step 1 — Read the Design Doc
 
 Read the relevant section in `docs/design-fullstack.md` for the endpoint's:
+
 - Request/response shape
 - Auth requirements
 - Error conditions
@@ -56,6 +57,7 @@ export async function getExample(id: string, requestingUserId: string) {
 ```
 
 Rules:
+
 - No Fastify, no HTTP, no `request`/`reply` objects.
 - Throws domain errors (subclasses of `Error`).
 - Uses the `db` singleton — never `new PrismaClient()`.
@@ -123,6 +125,7 @@ fastify.register(exampleRoutes, { prefix: '/examples' });
 Create `apps/backend/tests/integration/<domain>.test.ts`:
 
 Required test cases per endpoint:
+
 - ✅ Happy path: valid input → expected status + response shape
 - ❌ Auth failure: missing/invalid JWT → 401
 - ❌ Validation error: missing required field → 400

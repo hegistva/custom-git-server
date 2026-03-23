@@ -1,44 +1,44 @@
-import { useMutation } from '@tanstack/react-query'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { useMutation } from '@tanstack/react-query';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
-import { login } from '@/api/auth'
-import { useAuthStore } from '@/store/auth'
-import { loginSchema, type LoginInput } from '@/lib/schemas/auth'
-import type { ApiError } from '@/types/api'
+import { login } from '@/api/auth';
+import { useAuthStore } from '@/store/auth';
+import { loginSchema, type LoginInput } from '@/lib/schemas/auth';
+import type { ApiError } from '@/types/api';
 
 export default function LoginPage() {
-  const navigate = useNavigate()
-  const location = useLocation()
-  const from = (location.state as { from?: string } | null)?.from ?? '/dashboard'
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = (location.state as { from?: string } | null)?.from ?? '/dashboard';
 
-  const setTokens = useAuthStore((state) => state.setTokens)
-  const setUser = useAuthStore((state) => state.setUser)
+  const setTokens = useAuthStore((state) => state.setTokens);
+  const setUser = useAuthStore((state) => state.setUser);
 
   const { register, handleSubmit, formState, setError } = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
-  })
+  });
 
   const mutation = useMutation({
     mutationFn: (values: LoginInput) => login(values.username, values.password),
     onSuccess: (data) => {
-      setTokens(data.accessToken)
-      setUser(data.user)
-      navigate(from, { replace: true })
+      setTokens(data.accessToken);
+      setUser(data.user);
+      navigate(from, { replace: true });
     },
     onError: (err: ApiError) => {
       if (err.status === 401) {
-        setError('root', { message: 'Invalid username or password' })
+        setError('root', { message: 'Invalid username or password' });
       } else {
-        setError('root', { message: err.message ?? 'Login failed. Please try again.' })
+        setError('root', { message: err.message ?? 'Login failed. Please try again.' });
       }
     },
-  })
+  });
 
   const onSubmit = (values: LoginInput) => {
-    mutation.mutate(values)
-  }
+    mutation.mutate(values);
+  };
 
   return (
     <main>
@@ -53,9 +53,7 @@ export default function LoginPage() {
             autoComplete="username"
             {...register('username')}
           />
-          {formState.errors.username && (
-            <p role="alert">{formState.errors.username.message}</p>
-          )}
+          {formState.errors.username && <p role="alert">{formState.errors.username.message}</p>}
         </div>
 
         <div>
@@ -67,14 +65,10 @@ export default function LoginPage() {
             autoComplete="current-password"
             {...register('password')}
           />
-          {formState.errors.password && (
-            <p role="alert">{formState.errors.password.message}</p>
-          )}
+          {formState.errors.password && <p role="alert">{formState.errors.password.message}</p>}
         </div>
 
-        {formState.errors.root && (
-          <p role="alert">{formState.errors.root.message}</p>
-        )}
+        {formState.errors.root && <p role="alert">{formState.errors.root.message}</p>}
 
         <button type="submit" disabled={mutation.isPending}>
           {mutation.isPending ? 'Signing in…' : 'Sign in'}
@@ -82,9 +76,8 @@ export default function LoginPage() {
       </form>
 
       <p>
-        Don&apos;t have an account?{' '}
-        <Link to="/register">Create one</Link>
+        Don&apos;t have an account? <Link to="/register">Create one</Link>
       </p>
     </main>
-  )
+  );
 }

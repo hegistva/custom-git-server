@@ -13,7 +13,9 @@ export default function RepositoryPage() {
     <main>
       <nav style={{ marginBottom: '2rem' }}>
         <ul>
-          <li><Link to="/dashboard">Back to Dashboard</Link></li>
+          <li>
+            <Link to="/dashboard">Back to Dashboard</Link>
+          </li>
         </ul>
       </nav>
       <RepositoryDetail owner={user.username} name={name} />

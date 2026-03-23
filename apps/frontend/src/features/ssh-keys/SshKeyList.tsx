@@ -5,7 +5,11 @@ import type { SshKey } from '../../types/ssh-keys';
 
 export function SshKeyList() {
   const queryClient = useQueryClient();
-  const { data: keys, isLoading, isError } = useQuery({
+  const {
+    data: keys,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: queryKeys.sshKeys.list,
     queryFn: sshKeysApi.list,
   });

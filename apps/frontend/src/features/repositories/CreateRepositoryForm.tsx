@@ -4,7 +4,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
 import { createRepository } from '../../api/repositories';
 import { queryKeys } from '../../lib/queryKeys';
-import { createRepositorySchema, type CreateRepositoryFormValues } from '../../lib/schemas/repositories';
+import {
+  createRepositorySchema,
+  type CreateRepositoryFormValues,
+} from '../../lib/schemas/repositories';
 import { useAuthStore } from '../../store/auth';
 
 export function CreateRepositoryForm() {
@@ -53,7 +56,9 @@ export function CreateRepositoryForm() {
       )}
 
       <div style={{ marginBottom: '1rem' }}>
-        <p>Owner: <strong>{user?.username}</strong></p>
+        <p>
+          Owner: <strong>{user?.username}</strong>
+        </p>
       </div>
 
       <div style={{ marginBottom: '1rem' }}>
@@ -81,19 +86,19 @@ export function CreateRepositoryForm() {
           style={{ width: '100%', padding: '0.5rem' }}
           disabled={mutation.isPending}
         />
-        {errors.description && <p style={{ color: 'red', fontSize: '0.85rem' }}>{errors.description.message}</p>}
+        {errors.description && (
+          <p style={{ color: 'red', fontSize: '0.85rem' }}>{errors.description.message}</p>
+        )}
       </div>
 
       <div style={{ marginBottom: '1rem' }}>
         <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <input
-            type="checkbox"
-            {...register('isPrivate')}
-            disabled={mutation.isPending}
-          />
+          <input type="checkbox" {...register('isPrivate')} disabled={mutation.isPending} />
           Private repository
         </label>
-        {errors.isPrivate && <p style={{ color: 'red', fontSize: '0.85rem' }}>{errors.isPrivate.message}</p>}
+        {errors.isPrivate && (
+          <p style={{ color: 'red', fontSize: '0.85rem' }}>{errors.isPrivate.message}</p>
+        )}
       </div>
 
       <button type="submit" disabled={mutation.isPending}>

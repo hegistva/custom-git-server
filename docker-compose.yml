@@ -9,11 +9,15 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - "127.0.0.1:5432:5432"
+      - '127.0.0.1:5432:5432'
     networks:
       - gitnet
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-git_platform} -d ${POSTGRES_DB:-git_platform}"]
+      test:
+        [
+          'CMD-SHELL',
+          'pg_isready -U ${POSTGRES_USER:-git_platform} -d ${POSTGRES_DB:-git_platform}',
+        ]
       interval: 10s
       timeout: 3s
       retries: 5
@@ -29,7 +33,7 @@ services:
       - PORT=${BACKEND_PORT:-4000}
       - DISABLE_AUTH_RATE_LIMIT=${DISABLE_AUTH_RATE_LIMIT:-false}
     expose:
-      - "4000"
+      - '4000'
     volumes:
       - ./keys:/data/keys
       - ./repos:/git-repos
@@ -39,7 +43,13 @@ services:
       postgres:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:' + (process.env.PORT || 4000) + '/internal/health').then((res)=>process.exit(res.ok?0:1)).catch(()=>process.exit(1))"]
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://127.0.0.1:' + (process.env.PORT || 4000) + '/internal/health').then((res)=>process.exit(res.ok?0:1)).catch(()=>process.exit(1))",
+        ]
       interval: 10s
       timeout: 3s
       retries: 5
@@ -54,7 +64,7 @@ services:
     environment:
       - VITE_API_BASE_URL=${VITE_API_BASE_URL:-https://localhost/api}
     expose:
-      - "3000"
+      - '3000'
     networks:
       - gitnet
     restart: always
@@ -63,7 +73,7 @@ services:
     build: ./infra/git-server
     container_name: git-server
     ports:
-      - "2222:22"  # SSH
+      - '2222:22' # SSH
     volumes:
       - ./repos:/git-repos
       - ./keys/authorized_keys:/home/git/.ssh/authorized_keys
@@ -78,8 +88,8 @@ services:
       - git-server
       - frontend
     ports:
-      - "80:80"
-      - "443:443"
+      - '80:80'
+      - '443:443'
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data

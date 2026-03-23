@@ -25,10 +25,10 @@ export async function getUserTokens(userId: string) {
 export async function createToken(userId: string, label: string) {
   // Generate 32-byte crypto-random token equivalent to 43 chars in base64
   const rawToken = crypto.randomBytes(32).toString('base64url');
-  
+
   // Hash the token using bcrypt
   const hash = await bcrypt.hash(rawToken, env.bcryptCost);
-  
+
   // Extract a 8-character prefix for display
   const tokenPrefix = rawToken.slice(0, 8);
 

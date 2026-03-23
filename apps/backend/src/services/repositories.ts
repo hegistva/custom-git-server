@@ -117,7 +117,7 @@ export async function getRepository(ownerUsername: string, name: string, request
     where: {
       ownerId_name: { ownerId: owner.id, name },
     },
-    include: { owner: true }
+    include: { owner: true },
   });
 
   if (!repo) {
@@ -136,7 +136,7 @@ export async function getRepository(ownerUsername: string, name: string, request
 export async function deleteRepository(ownerId: string, name: string) {
   const repo = await db.repository.findUnique({
     where: { ownerId_name: { ownerId, name } },
-    include: { owner: true }
+    include: { owner: true },
   });
 
   if (!repo) {

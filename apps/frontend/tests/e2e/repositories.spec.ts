@@ -1,17 +1,12 @@
 import { test, expect } from '@playwright/test';
-import {
-  createE2ECredentials,
-  createE2ERepoName,
-  loginViaUi,
-  registerUserViaApi,
-} from './utils';
+import { createE2ECredentials, createE2ERepoName, loginViaUi, registerUserViaApi } from './utils';
 
 test.describe('Repository Management', () => {
   let credentials = createE2ECredentials('repo_user');
 
   test.beforeEach(async ({ page, request }) => {
     credentials = createE2ECredentials('repo_user');
-    
+
     await registerUserViaApi(request, credentials);
     await loginViaUi(page, credentials);
   });

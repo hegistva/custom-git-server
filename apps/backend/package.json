@@ -16,7 +16,9 @@
     "test:watch": "vitest",
     "test:cov": "vitest run --coverage",
     "test:cov:ci": "CI=true vitest run --coverage",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write \"{src,tests,prisma}/**/*.{ts,js,json,md,yml,yaml}\"",
+    "format:check": "prettier --check \"{src,tests,prisma}/**/*.{ts,js,json,md,yml,yaml}\""
   },
   "dependencies": {
     "@fastify/cookie": "^11.0.2",

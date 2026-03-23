@@ -20,9 +20,7 @@ async function corePlugins(app: FastifyInstance): Promise<void> {
     }
 
     const message =
-      statusCode >= 500 && env.nodeEnv === 'production'
-        ? 'Internal server error'
-        : error.message;
+      statusCode >= 500 && env.nodeEnv === 'production' ? 'Internal server error' : error.message;
 
     return reply.code(statusCode).send({ message });
   });

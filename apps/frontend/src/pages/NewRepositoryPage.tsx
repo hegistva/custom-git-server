@@ -6,7 +6,9 @@ export default function NewRepositoryPage() {
     <main>
       <nav style={{ marginBottom: '2rem' }}>
         <ul>
-          <li><Link to="/dashboard">Back to Dashboard</Link></li>
+          <li>
+            <Link to="/dashboard">Back to Dashboard</Link>
+          </li>
         </ul>
       </nav>
       <h1>Create a new repository</h1>

@@ -37,10 +37,7 @@ const parseBcryptCost = (value: string | undefined, fallback: number): number =>
   return parsed;
 };
 
-const parseDisableAuthRateLimit = (
-  value: string | undefined,
-  nodeEnv: string,
-): boolean => {
+const parseDisableAuthRateLimit = (value: string | undefined, nodeEnv: string): boolean => {
   if (!value) {
     return false;
   }
@@ -58,9 +55,7 @@ const parseDisableAuthRateLimit = (
     return false;
   }
 
-  throw new Error(
-    `Invalid DISABLE_AUTH_RATE_LIMIT value: ${value}. Use true/false or 1/0.`,
-  );
+  throw new Error(`Invalid DISABLE_AUTH_RATE_LIMIT value: ${value}. Use true/false or 1/0.`);
 };
 
 const nodeEnv = process.env.NODE_ENV ?? 'development';
@@ -71,10 +66,7 @@ export const env = {
   databaseUrl: requireEnv('DATABASE_URL'),
   jwtSecret: requireEnv('JWT_SECRET'),
   bcryptCost: parseBcryptCost(process.env.BCRYPT_COST, 12),
-  disableAuthRateLimit: parseDisableAuthRateLimit(
-    process.env.DISABLE_AUTH_RATE_LIMIT,
-    nodeEnv,
-  ),
+  disableAuthRateLimit: parseDisableAuthRateLimit(process.env.DISABLE_AUTH_RATE_LIMIT, nodeEnv),
   reposPath: requireEnv('REPOS_PATH'),
   keysPath: requireEnv('KEYS_PATH'),
 };

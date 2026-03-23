@@ -1,29 +1,33 @@
-import { useMutation } from '@tanstack/react-query'
-import { Link, useNavigate } from 'react-router-dom'
+import { useMutation } from '@tanstack/react-query';
+import { Link, useNavigate } from 'react-router-dom';
 
-import { logout } from '@/api/auth'
-import { useAuthStore } from '@/store/auth'
-import { RepositoryList } from '@/features/repositories/RepositoryList'
+import { logout } from '@/api/auth';
+import { useAuthStore } from '@/store/auth';
+import { RepositoryList } from '@/features/repositories/RepositoryList';
 
 export default function DashboardPage() {
-  const navigate = useNavigate()
-  const clearAuth = useAuthStore((state) => state.clearAuth)
-  const user = useAuthStore((state) => state.user)
+  const navigate = useNavigate();
+  const clearAuth = useAuthStore((state) => state.clearAuth);
+  const user = useAuthStore((state) => state.user);
 
   const logoutMutation = useMutation({
     mutationFn: logout,
     onSettled: () => {
-      clearAuth()
-      navigate('/login', { replace: true })
+      clearAuth();
+      navigate('/login', { replace: true });
     },
-  })
+  });
 
   return (
     <main>
       <nav style={{ marginBottom: '2rem' }}>
         <ul>
-          <li><Link to="/settings/ssh-keys">Manage SSH Keys</Link></li>
-          <li><Link to="/settings/tokens">Manage Personal Access Tokens</Link></li>
+          <li>
+            <Link to="/settings/ssh-keys">Manage SSH Keys</Link>
+          </li>
+          <li>
+            <Link to="/settings/tokens">Manage Personal Access Tokens</Link>
+          </li>
         </ul>
       </nav>
       <h1>Dashboard</h1>
@@ -33,5 +37,5 @@ export default function DashboardPage() {
         {logoutMutation.isPending ? 'Logging out...' : 'Log out'}
       </button>
     </main>
-  )
+  );
 }
