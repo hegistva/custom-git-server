@@ -57,13 +57,14 @@ const COOKIE_OPTIONS = {
 // ─── Route plugin ─────────────────────────────────────────────────────────────
 
 const authRoutes: FastifyPluginAsync = async (app) => {
-  // Rate-limit the entire /api/auth/* scope (disabled in test environment)
-  if (env.nodeEnv !== 'test') {
+  // Rate-limit the entire /api/auth/* scope unless explicitly disabled for non-prod E2E.
+  if (env.nodeEnv !== 'test' && !env.disableAuthRateLimit) {
     await app.register(rateLimit, {
       max: 20,
       timeWindow: '1 minute',
       keyGenerator: (req) => req.ip,
-      errorResponseBuilder: () => ({
+      errorResponseBuilder: (_req, context) => ({
+        statusCode: context.statusCode,
         message: 'Too many requests, please try again later.',
       }),
     });

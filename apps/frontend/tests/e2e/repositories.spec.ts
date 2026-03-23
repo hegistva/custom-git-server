@@ -1,29 +1,24 @@
 import { test, expect } from '@playwright/test';
+import {
+  createE2ECredentials,
+  createE2ERepoName,
+  loginViaUi,
+  registerUserViaApi,
+} from './utils';
 
 test.describe('Repository Management', () => {
-  // Use a unique name for each run
-  const repoName = `test-repo-${Date.now()}`;
+  let credentials = createE2ECredentials('repo_user');
 
   test.beforeEach(async ({ page, request }) => {
-    // Re-use API logic for login, but simplified here we just login via UI
-    // Ideally we would seed via API for speed.
-    const username = `user${Date.now()}`;
-    const password = 'password123';
+    credentials = createE2ECredentials('repo_user');
     
-    // Register
-    await request.post('/api/auth/register', {
-      data: { username, email: `${username}@example.com`, password, confirmPassword: password }
-    });
-
-    // Login via UI
-    await page.goto('/login');
-    await page.getByLabel(/username or email/i).fill(username);
-    await page.getByLabel(/password/i).fill(password);
-    await page.getByRole('button', { name: /login/i }).click();
-    await expect(page).toHaveURL('/dashboard');
+    await registerUserViaApi(request, credentials);
+    await loginViaUi(page, credentials);
   });
 
   test('creates a repository and deletes it', async ({ page }) => {
+    const repoName = createE2ERepoName();
+
     // Navigate to new repository
     await page.getByRole('button', { name: /new repository/i }).click();
     await expect(page).toHaveURL('/repositories/new');

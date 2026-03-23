@@ -27,6 +27,7 @@ services:
       - ./.env
     environment:
       - PORT=${BACKEND_PORT:-4000}
+      - DISABLE_AUTH_RATE_LIMIT=${DISABLE_AUTH_RATE_LIMIT:-false}
     expose:
       - "4000"
     volumes:

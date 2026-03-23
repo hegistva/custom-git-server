@@ -219,6 +219,13 @@ pnpm --filter @custom-git-server/frontend test:cov:ci
 
 Playwright E2E tests (requires the full stack running):
 
+If auth rate limiting causes flaky E2E failures, set `DISABLE_AUTH_RATE_LIMIT=true`
+in your `.env` and restart backend before running Playwright:
+
+```bash
+docker compose up -d --build backend
+```
+
 ```bash
 pnpm --filter @custom-git-server/frontend test:e2e
 ```

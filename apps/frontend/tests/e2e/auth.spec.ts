@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-import crypto from 'crypto'
+import { createE2ECredentials, registerUserViaUi, loginViaUi } from './utils'
 
 /**
  * End-to-end auth flow tests.
@@ -10,46 +10,25 @@ import crypto from 'crypto'
  */
 
 test.describe('Auth flow', () => {
-  // Generate a unique username per test run to avoid conflicts
-  const uniqueSuffix = crypto.randomBytes(4).toString('hex')
-  const testUsername = `e2euser_${uniqueSuffix}`
-  const testEmail = `e2euser_${uniqueSuffix}@example.com`
-  const testPassword = 'SecurePass1!'
-
   test('user can register and is redirected to dashboard', async ({ page }) => {
+    const credentials = createE2ECredentials('auth_register')
+
     await page.goto('/register')
     await expect(page.getByRole('heading', { name: /create an account/i })).toBeVisible()
 
-    await page.getByLabel('Username').fill(testUsername)
-    await page.getByLabel('Email').fill(testEmail)
-    await page.getByLabel('Password', { exact: true }).fill(testPassword)
-    await page.getByLabel('Confirm password').fill(testPassword)
-    await page.getByRole('button', { name: /create account/i }).click()
-
-    // Should be redirected to dashboard after successful registration
-    await expect(page).toHaveURL(/\/dashboard/)
+    await registerUserViaUi(page, credentials)
   })
 
   test('user can log in after registration', async ({ page }) => {
-    // Register first
-    await page.goto('/register')
-    await page.getByLabel('Username').fill(testUsername)
-    await page.getByLabel('Email').fill(testEmail)
-    await page.getByLabel('Password', { exact: true }).fill(testPassword)
-    await page.getByLabel('Confirm password').fill(testPassword)
-    await page.getByRole('button', { name: /create account/i }).click()
-    await expect(page).toHaveURL(/\/dashboard/)
+    const credentials = createE2ECredentials('auth_login')
+
+    await registerUserViaUi(page, credentials)
 
     // Log out via the UI button
     await page.getByRole('button', { name: /log out/i }).click()
     await expect(page).toHaveURL(/\/login/)
 
-    // Log in
-    await page.getByLabel('Username').fill(testUsername)
-    await page.getByLabel('Password').fill(testPassword)
-    await page.getByRole('button', { name: /sign in/i }).click()
-
-    await expect(page).toHaveURL(/\/dashboard/)
+    await loginViaUi(page, credentials)
   })
 
   test('shows validation errors on empty login form', async ({ page }) => {
