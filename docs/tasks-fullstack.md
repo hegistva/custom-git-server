@@ -187,8 +187,8 @@ Reference design: [design-fullstack.md](design-fullstack.md)
 - [x] Write integration test: valid PAT → 200 on Git info/refs endpoint
 - [x] Write integration test: invalid PAT → 401
 - [x] Write integration test: unauthenticated → 401
-- [ ] Verify `git clone`, `git push`, `git fetch` work end-to-end over HTTPS with PAT
-- [ ] Verify SSH clone / push unchanged after changes
+- [x] Verify `git clone`, `git push`, `git fetch` work end-to-end over HTTPS with PAT
+- [x] Verify SSH clone / push unchanged after changes
 
 ---
 
